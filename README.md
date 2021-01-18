@@ -4,7 +4,7 @@ Boilerplate based on https://github.com/jwkvam/minimal-flask-react
 
 ## Run Locally
 
-1. Clone this repo: `git clone git@github.com:jwkvam/minimal-flask-react.git`
+1. Clone this repo
 2. npm install
 3. npm run dev
 4. pip install -r requirements.txt
