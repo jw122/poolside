@@ -1,0 +1,56 @@
+runtime: python27
+api_version: 1
+threadsafe: no
+handlers:
+
+
+
+- url: /uma-feedback
+  secure: always
+  static_files: landing/uma-feedback.html
+  upload: landing/uma-feedback.html
+
+
+
+- url: /assets
+  static_dir: demo/assets
+
+- url: /whitepaper
+  static_files: static/whitepaper.pdf
+  upload: static/whitepaper.pdf
+
+- url: /summary
+  static_files: static/summary.pdf
+  upload: static/summary.pdf
+
+- url: /account
+  secure: always
+  static_files: demo/index.html
+  upload: demo/index.html
+
+
+### CONSOLE ###
+
+- url: /console/static
+  static_dir: console/app/view/static
+
+- url: /console.*
+  script: console/app/console.py
+  login: admin
+
+
+- url: /favicon\.ico
+  static_files: static/img/favicon/favicon.ico
+  upload: static/img/favicon/favicon\.ico
+
+- url: /static/
+  static_dir: static
+
+
+- url: /.*
+  secure: always
+  script: main.application
+
+libraries:
+- name: ssl
+  version: latest

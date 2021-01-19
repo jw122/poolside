@@ -1,10 +1,34 @@
 <!DOCTYPE html>
-<html>
-  <head>
-      <title>Flask React</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script src="static/bundle.js"></script>
-  </body>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Poolside</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Recursive:300,400,700" rel="stylesheet">
+    <!-- Link to your stylesheet here -->
+    <link rel="stylesheet" href="/assets/css/lit.css">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <style>
+
+    </style>
+
+    <script type="text/javascript">
+
+    </script>
+
+</head>
+
+<body>
+  <h1>Poolside</h1>
+  <section>
+    <h2>Tokens</h2>
+    <ul>
+      {% for token in tokens %}
+      <li>{{ token.name }} {{ token.tradeVolume }}</li>
+      {% endfor %}
+    </ul>
+</body>
+
 </html>
