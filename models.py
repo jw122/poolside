@@ -1,7 +1,12 @@
 import logging
 from google.appengine.ext import db
 
-class Token(db.Expando):
+
+class Model():
+    def to_dict(self):
+       return dict([(p, unicode(getattr(self, p))) for p in self.properties()])
+
+class Token(db.Expando, Model):
     # key_name is id
     id = db.StringProperty()
     symbol = db.StringProperty(required=False)
