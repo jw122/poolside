@@ -16,25 +16,16 @@ class Index(webapp2.RequestHandler):
 
 class UpdateData(webapp2.RequestHandler):
     def get(self):
-        subgraph_response = graph.one_inch_tokens()
-        tokens = []
-        for token in subgraph_response['data']['tokens']:
-            tokens.append(Token(key_name=token['id'],
-            id=token['id'],
-            name=token['name'],
-            symbol=token['symbol'],
-            tradeVolume=float(token['tradeVolume']),
-            tradeCount=float(token['tradeCount']),
-            decimals=int(token['decimals']),
-            ))
-        db.put(tokens)
+        uniswap_tokens = fetch_uniswap()
+        one_inch_tokens = fetch_one_inch()
+        tokens = uniswap_tokens + one_inch_tokens
         self.response.out.write('Saved %s tokens' % len(tokens))
 
 class NewListingsAPI(webapp2.RequestHandler):
     def get(self):
         NEW_LISTING_MAX_DAYS = 5
         new_listing_cutoff = datetime.datetime.now() - datetime.timedelta(days=NEW_LISTING_MAX_DAYS)
-        tokens = Token.all().filter('created > ', new_listing_cutoff).fetch(500)
+        tokens = Token.all().filter('created > ', new_listing_cutoff).fetch(10)
         tokens.sort(reverse=True, key=lambda t: t.tradeVolume)
         api_response = {
             'tokens': [t.to_dict() for t in tokens]
@@ -46,7 +37,7 @@ class TopMoversAPI(webapp2.RequestHandler):
     def get(self):
         NEW_LISTING_MAX_DAYS = 5
         new_listing_cutoff = datetime.datetime.now() - datetime.timedelta(days=NEW_LISTING_MAX_DAYS)
-        tokens = Token.all().order('-tradeVolume').fetch(500)
+        tokens = Token.all().order('-tradeVolume').fetch(10)
         api_response = {
             'tokens': [t.to_dict() for t in tokens]
         }
@@ -54,6 +45,38 @@ class TopMoversAPI(webapp2.RequestHandler):
         self.response.out.write(json.dumps(api_response))
 
 
+def fetch_one_inch():
+    print("fetching data from 1inch")
+    subgraph_response = graph.one_inch_tokens()
+    tokens = []
+    for token in subgraph_response['data']['tokens']:
+        tokens.append(Token(key_name=token['id'],
+        id=token['id'],
+        name=token['name'],
+        symbol=token['symbol'],
+        tradeVolume=float(token['tradeVolume']),
+        tradeCount=float(token['tradeCount']),
+        decimals=int(token['decimals']),
+        ))
+    db.put(tokens)
+    return tokens
+
+def fetch_uniswap():
+    print("fetching data from uniswap")
+    subgraph_response = graph.uniswap_tokens()
+    tokens = []
+    for token_data in subgraph_response['data']['tokenDayDatas']:
+        token = token_data['token']
+        tokens.append(Token(key_name=token['id'],
+        id=token['id'],
+        name=token['name'],
+        symbol=token['symbol'],
+        tradeVolume=float(token['tradeVolumeUSD']),
+        tradeCount=float(token['txCount']),
+        decimals=int(token['decimals']),
+        ))
+    db.put(tokens)
+    return tokens
 
 
 def handle_404(request, response, exception):
