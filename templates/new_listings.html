@@ -1,0 +1,6 @@
+<h2>New Listings</h2>
+<ul>
+  {% for token in tokens %}
+    <li>{{ token.name }} {{ token.tradeVolume }}</li>
+  {% endfor %}
+</ul>

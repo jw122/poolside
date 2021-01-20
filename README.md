@@ -1,14 +1,9 @@
 # poolside
 
-Boilerplate based on https://github.com/jwkvam/minimal-flask-react
-
 ## Run Locally
 
 1. Clone this repo
-2. npm install
-3. npm run dev
-4. pip install -r requirements.txt
-5. python server.py
-6. Goto http://localhost:3000
-
-If you would like to have webpack rebuild your javascript any time your React code changes, enter `npm run start` in a different terminal.
+2. Install `gcloud` if it is not already installed.
+3. In the parent directory containing this project, run `dev_appserver.py poolside`
+4. Go to http://localhost:8080/update-data to load initial data into the database.
+5. Go to http://localhost:8080/ to view previously loaded data
