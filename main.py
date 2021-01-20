@@ -9,9 +9,7 @@ import json
 
 class Index(webapp2.RequestHandler):
     def get(self):
-        tokens = Token.all().fetch(50)
-        context = { 'tokens': tokens }
-        self.response.out.write(template.render('templates/index.html', context))
+        self.response.out.write(template.render('templates/index.html', {}))
 
 
 class UpdateData(webapp2.RequestHandler):
