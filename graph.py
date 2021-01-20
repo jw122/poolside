@@ -1,6 +1,8 @@
 import logging
 import requests
 
+GRAPH_REQUEST_TIMEOUT = 15
+
 def one_inch_tokens():
     headers = {}
     query = """
@@ -16,7 +18,7 @@ def one_inch_tokens():
     }
     """
     request = requests.post('https://api.thegraph.com/subgraphs/name/1inch-exchange/one-inch-v2',
-        json={'query': query}, headers=headers)
+        json={'query': query}, headers=headers, timeout=GRAPH_REQUEST_TIMEOUT)
     if request.status_code == 200:
         return request.json()
 
@@ -36,7 +38,7 @@ def uniswap_tokens():
         tradeVolumeUSD
         txCount
       }
-      
+
       date
       totalLiquidityUSD
       dailyVolumeUSD
@@ -46,6 +48,6 @@ def uniswap_tokens():
   """
 
   request = requests.post('https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',
-      json={'query': query}, headers=headers)
+      json={'query': query}, headers=headers, timeout=GRAPH_REQUEST_TIMEOUT)
   if request.status_code == 200:
       return request.json()
