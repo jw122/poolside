@@ -16,5 +16,5 @@ class Token(db.Expando, Model):
     tradeCount = db.FloatProperty(required=False)
     tradeVolume = db.FloatProperty(required=False)
     decimals = db.IntegerProperty(required=False)
-    created = db.DateTimeProperty(auto_now_add=True)
+    created = db.DateTimeProperty(required=False)
     modified = db.DateTimeProperty(auto_now=True)

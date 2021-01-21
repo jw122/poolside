@@ -16,9 +16,13 @@ class Index(webapp2.RequestHandler):
 
 class UpdateData(webapp2.RequestHandler):
     def get(self):
+        # top movers
         uniswap_tokens = fetch_uniswap()
         one_inch_tokens = fetch_one_inch()
-        tokens = uniswap_tokens + one_inch_tokens
+        # new tokens
+        new_listings = fetch_new()
+
+        tokens = uniswap_tokens + one_inch_tokens + new_listings
         self.response.out.write('Saved %s tokens' % len(tokens))
 
 class NewListingsAPI(webapp2.RequestHandler):
@@ -75,6 +79,39 @@ def fetch_uniswap():
         tradeVolume=float(token_data['dailyVolumeUSD']),
         tradeCount=float(token_data['dailyTxns']),
         decimals=int(token['decimals']),
+        ))
+    db.put(tokens)
+    return tokens
+
+def fetch_new():
+    print("fetching new listings from uniswap")
+    subgraph_response = graph.uniswap_new_tokens()
+    tokens = []
+    for token_data in subgraph_response['data']['pairs']:
+        token0 = token_data['token0']
+        token1 = token_data['token1']
+        reserve0 = token_data['reserve0']
+        reserve1 = token_data['reserve1']
+        newest_token = token0
+        price = token_data['token0Price']
+
+        # TODO: confirm
+        # usually the one with the lower reserve is the newer token in the pair
+        if reserve0 < reserve1:
+            newest_token = token1
+            price = token_data['token1Price']
+
+        print("newest token: ", newest_token)
+
+        tokens.append(Token(key_name=newest_token['id'],
+        id=newest_token['id'],
+        name=newest_token['name'],
+        symbol=newest_token['symbol'],
+        price=float(price),
+        tradeVolume=float(newest_token['tradeVolumeUSD']),
+        tradeCount=float(newest_token['txCount']),
+        decimals=int(newest_token['decimals']),
+        created=datetime.datetime.fromtimestamp(float(token_data['createdAtTimestamp']))
         ))
     db.put(tokens)
     return tokens
