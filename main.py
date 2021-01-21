@@ -71,8 +71,9 @@ def fetch_uniswap():
         id=token['id'],
         name=token['name'],
         symbol=token['symbol'],
-        tradeVolume=float(token['tradeVolumeUSD']),
-        tradeCount=float(token['txCount']),
+        price=float(token_data['priceUSD']),
+        tradeVolume=float(token_data['dailyVolumeUSD']),
+        tradeCount=float(token_data['dailyTxns']),
         decimals=int(token['decimals']),
         ))
     db.put(tokens)
