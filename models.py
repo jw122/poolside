@@ -39,3 +39,11 @@ class Pair(db.Expando, Model):
     created = db.DateTimeProperty(required=False)
     modified = db.DateTimeProperty(auto_now=True)
 
+    def to_dict(self):
+        logging.info('to dict')
+        pair_dict = super(Pair, self).to_dict()
+        pair_dict['pair-name'] = pair_dict['name']
+        pair_dict['name'] = pair_dict['name'].replace('Wrapped Ether, ', '').replace(', Wrapped Ether', '')
+        pair_dict['pair-symbol'] = pair_dict['symbol']
+        pair_dict['symbol'] = pair_dict['symbol'].replace('WETH-', '').replace('-WETH', '')
+        return pair_dict
