@@ -3,6 +3,7 @@ import webapp2
 from google.appengine.ext.webapp import template
 from models import Token, Pair
 import graph
+import search
 from google.appengine.ext import db
 import datetime
 import json
@@ -17,8 +18,24 @@ class UpdateData(webapp2.RequestHandler):
         # top movers
         uniswap_tokens = fetch_uniswap()
         one_inch_tokens = fetch_one_inch()
+
         # new tokens
         new_listings = fetch_new()
+
+        token_names = []
+        documents = []
+        for token_list in [uniswap_tokens, one_inch_tokens, new_listings]:
+            for token in token_list:
+                if token.name not in token_names:
+                    token_names.append(token.name)
+                    search_fields = [
+                        { 'name': 'name', 'value': token.name, 'tokenize': True },
+                        { 'name': 'symbol', 'value': token.symbol, 'tokenize': False  },
+                    ]
+                    documents.append(search.create_document(token.key().name(), search_fields))
+
+        if documents:
+            search.add_documents_to_index('tokens', documents)
 
         tokens = uniswap_tokens + one_inch_tokens + new_listings
         self.response.out.write('Saved %s tokens' % len(tokens))
@@ -49,10 +66,14 @@ class TopMoversAPI(webapp2.RequestHandler):
 
 class SearchAPI(webapp2.RequestHandler):
     def get(self):
-        # TODO implement full text search
-        tokens = Token.all().fetch(3)
+        documents = search.query_index('tokens', self.request.get('keyword'))
+        if documents:
+            tokens = [t.to_dict() for t in Token.get_by_key_name([document.doc_id for document in documents]) if t]
+            tokens.extend([t.to_dict() for t in Pair.get_by_key_name([document.doc_id for document in documents]) if t])
+        else:
+            tokens = []
         api_response = {
-            'tokens': [t.to_dict() for t in tokens]
+            'tokens': tokens
         }
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(api_response))

@@ -5,30 +5,6 @@ handlers:
 
 
 
-- url: /uma-feedback
-  secure: always
-  static_files: landing/uma-feedback.html
-  upload: landing/uma-feedback.html
-
-
-
-- url: /assets
-  static_dir: demo/assets
-
-- url: /whitepaper
-  static_files: static/whitepaper.pdf
-  upload: static/whitepaper.pdf
-
-- url: /summary
-  static_files: static/summary.pdf
-  upload: static/summary.pdf
-
-- url: /account
-  secure: always
-  static_files: demo/index.html
-  upload: demo/index.html
-
-
 ### CONSOLE ###
 
 - url: /console/static

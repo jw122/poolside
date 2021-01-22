@@ -2,6 +2,12 @@ import logging
 from google.appengine.ext import db
 import math
 
+def token_from_pair_name(n):
+    return n.replace('Wrapped Ether, ', '').replace(', Wrapped Ether', '')
+
+def token_from_pair_symbol(n):
+    return n.replace('WETH-', '').replace('-WETH', '')
+
 class Model():
     def to_dict(self):
        return dict([(p, unicode(getattr(self, '%s_to_dict' % p, getattr(self, p)))) for p in self.properties()])
@@ -49,7 +55,7 @@ class Pair(db.Expando, TokenModel):
         logging.info('to dict')
         pair_dict = super(Pair, self).to_dict()
         pair_dict['pair-name'] = pair_dict['name']
-        pair_dict['name'] = pair_dict['name'].replace('Wrapped Ether, ', '').replace(', Wrapped Ether', '')
-        pair_dict['pair-symbol'] = pair_dict['symbol']
-        pair_dict['symbol'] = pair_dict['symbol'].replace('WETH-', '').replace('-WETH', '')
+        pair_dict['name'] =  token_from_pair_name(pair_dict['name'])
+        pair_dict['pair-symbol'] =  token_from_pair_symbol(pair_dict['symbol'])
+        pair_dict['symbol'] = pair_dict['symbol']
         return pair_dict
