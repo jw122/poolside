@@ -4,3 +4,22 @@ body, html {
 	-webkit-font-smoothing: antialiased !important;
 	color: #333;
 }
+
+header{
+	background: url('/static/images/poolside-bg.jpg') #5FFFE0;
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	top: 0;
+position: absolute;
+width: 100%;
+height: 120px;
+}
+
+
+#subheader{
+	margin-top: -14px;
+}
+
+.patrick-hand {
+	font-family: 'Patrick Hand', sans-serif;
+}
