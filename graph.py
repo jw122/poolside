@@ -73,6 +73,7 @@ def uniswap_new_tokens():
           tradeVolumeUSD
           txCount
         }
+        id
         reserve0
         reserve1
         volumeToken0
@@ -81,6 +82,8 @@ def uniswap_new_tokens():
         token1Price
         totalSupply
         reserveUSD
+        volumeUSD
+        txCount
         createdAtTimestamp
       }
   }

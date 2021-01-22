@@ -90,27 +90,17 @@ def fetch_new():
     for token_data in subgraph_response['data']['pairs']:
         token0 = token_data['token0']
         token1 = token_data['token1']
-        reserve0 = token_data['reserve0']
-        reserve1 = token_data['reserve1']
-        newest_token = token0
-        price = token_data['token0Price']
 
-        # TODO: confirm
-        # usually the one with the lower reserve is the newer token in the pair
-        if reserve0 < reserve1:
-            newest_token = token1
-            price = token_data['token1Price']
+        pair_symbol = token0['symbol'] + '-' + token1['symbol']
+        pair_name = token0['name'] + ', ' + token1['name']
+        print("getting pair: ", pair_name)
 
-        print("newest token: ", newest_token)
-
-        tokens.append(Token(key_name=newest_token['id'],
-        id=newest_token['id'],
-        name=newest_token['name'],
-        symbol=newest_token['symbol'],
-        price=float(price),
-        tradeVolume=float(newest_token['tradeVolumeUSD']),
-        tradeCount=float(newest_token['txCount']),
-        decimals=int(newest_token['decimals']),
+        tokens.append(Token(key_name=pair_symbol,
+        id=token_data['id'],
+        name=pair_name,
+        symbol=pair_symbol,
+        tradeVolume=float(token_data['volumeUSD']),
+        tradeCount=float(token_data['txCount']),
         created=datetime.datetime.fromtimestamp(float(token_data['createdAtTimestamp']))
         ))
     db.put(tokens)
