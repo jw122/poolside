@@ -4,7 +4,7 @@ function loadNewListings(app){
             type: "GET",
             cache: false,
             success: function(response) {
-              $.poolside.newListings = response.tokens;
+              $.poolside.newListings = response.pairs;
             }
       });
 }
