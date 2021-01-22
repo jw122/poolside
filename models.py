@@ -52,7 +52,6 @@ class Pair(db.Expando, TokenModel):
     modified = db.DateTimeProperty(auto_now=True)
 
     def to_dict(self):
-        logging.info('to dict')
         pair_dict = super(Pair, self).to_dict()
         pair_dict['pair-name'] = pair_dict['name']
         pair_dict['name'] =  token_from_pair_name(pair_dict['name'])
