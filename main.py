@@ -1,7 +1,7 @@
 import logging
 import webapp2
 from google.appengine.ext.webapp import template
-from models import Token
+from models import Token, Pair
 import graph
 from google.appengine.ext import db
 import datetime
@@ -29,10 +29,10 @@ class NewListingsAPI(webapp2.RequestHandler):
     def get(self):
         NEW_LISTING_MAX_DAYS = 5
         new_listing_cutoff = datetime.datetime.now() - datetime.timedelta(days=NEW_LISTING_MAX_DAYS)
-        tokens = Token.all().filter('created > ', new_listing_cutoff).fetch(10)
-        tokens.sort(reverse=True, key=lambda t: t.tradeVolume)
+        pairs = Pair.all().filter('created > ', new_listing_cutoff).fetch(10)
+        pairs.sort(reverse=True, key=lambda p: p.created)
         api_response = {
-            'tokens': [t.to_dict() for t in tokens]
+            'pairs': [p.to_dict() for p in pairs]
         }
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(api_response))
@@ -86,25 +86,25 @@ def fetch_uniswap():
 def fetch_new():
     print("fetching new listings from uniswap")
     subgraph_response = graph.uniswap_new_tokens()
-    tokens = []
-    for token_data in subgraph_response['data']['pairs']:
-        token0 = token_data['token0']
-        token1 = token_data['token1']
+    pairs = []
+    for pair in subgraph_response['data']['pairs']:
+        token0 = pair['token0']
+        token1 = pair['token1']
 
         pair_symbol = token0['symbol'] + '-' + token1['symbol']
         pair_name = token0['name'] + ', ' + token1['name']
         print("getting pair: ", pair_name)
 
-        tokens.append(Token(key_name=pair_symbol,
-        id=token_data['id'],
-        name=pair_name,
+        pairs.append(Pair(key_name=pair_symbol,
+        id=pair['id'],
         symbol=pair_symbol,
-        tradeVolume=float(token_data['volumeUSD']),
-        tradeCount=float(token_data['txCount']),
-        created=datetime.datetime.fromtimestamp(float(token_data['createdAtTimestamp']))
+        name=pair_name,
+        tradeVolume=float(pair['volumeUSD']),
+        tradeCount=float(pair['txCount']),
+        created=datetime.datetime.fromtimestamp(float(pair['createdAtTimestamp']))
         ))
-    db.put(tokens)
-    return tokens
+    db.put(pairs)
+    return pairs
 
 
 def handle_404(request, response, exception):
