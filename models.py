@@ -12,11 +12,13 @@ class Token(db.Expando, Model):
     symbol = db.StringProperty(required=False)
     name = db.StringProperty(required=False)
     description = db.StringProperty(required=False)
+    price = db.FloatProperty(required=False)
     tradeCount = db.FloatProperty(required=False)
     tradeVolume = db.FloatProperty(required=False)
     decimals = db.IntegerProperty(required=False)
-    created = db.DateTimeProperty(auto_now_add=True)
+    created = db.DateTimeProperty(required=False)
     modified = db.DateTimeProperty(auto_now=True)
+
 
     @property
     def tradeVolume_to_dict(self):
@@ -26,3 +28,14 @@ class Token(db.Expando, Model):
             return '%s' % self.tradeVolume
         else:
             return ''
+
+class Pair(db.Expando, Model):
+    # key_name is id
+    id = db.StringProperty()
+    symbol = db.StringProperty(required=False)
+    name = db.StringProperty(required=False)
+    tradeVolume = db.FloatProperty(required=False)
+    tradeCount = db.FloatProperty(required=False)
+    created = db.DateTimeProperty(required=False)
+    modified = db.DateTimeProperty(auto_now=True)
+
