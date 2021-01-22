@@ -1,0 +1,15 @@
+
+<table  class="shadow-lg bg-gray-700">
+<tr>
+  <th class="bg-blue-900 text-white border text-left px-8 py-4 text-sm">Name</th>
+  <th class="bg-blue-900 text-white border text-left px-8 py-4 text-sm">Symbol</th>
+  <th class="bg-blue-900 text-white border text-left px-8 py-4 text-sm">Volume</th>
+  <th class="bg-blue-900 text-white border text-left px-8 py-4 text-sm">Price</th>
+</tr>
+<tr v-for="token in searchResults">
+  <td class="border px-8 py-4 text-sm text-gray-100">${ token.name } </td>
+  <td class="border px-8 py-4 text-sm text-gray-100">${ token.symbol } </td>
+  <td class="border px-8 py-4 text-sm text-gray-100">${ token.tradeVolume }</td>
+  <td class="border px-8 py-4 text-sm text-gray-100">$0.0</td>
+</tr>
+</table>

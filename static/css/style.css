@@ -23,3 +23,11 @@ height: 120px;
 .patrick-hand {
 	font-family: 'Patrick Hand', sans-serif;
 }
+
+@media (max-width:1100px) {
+
+	#top-movers{
+		padding-left: 0;
+	}
+
+}
