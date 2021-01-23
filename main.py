@@ -66,7 +66,7 @@ class TopMoversAPI(webapp2.RequestHandler):
 class TokenAPI(webapp2.RequestHandler):
     def get(self):
         id = self.request.get("id")
-        [token] = Token.all().filter('id =', id).fetch(1)
+        token = Token.get_by_key_name(id)
         api_response = {
             'token': token.to_dict()
         }
