@@ -49,6 +49,16 @@ th.trades, td.trades{
 	word-wrap: break-word;
 }
 
+.token-audit{
+	font-size: 0.8em;
+}
+
+.token-audit-item{
+	margin-top: 2px;
+}
+.token-audit-item:first-child{
+	margin-top: 8px;
+}
 @media (max-width:1100px) {
 
 	#top-movers{

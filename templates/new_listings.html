@@ -1,3 +1,6 @@
+<p class="text-sm text-white -mt-2 mb-4">
+  ⚠️ &nbsp; Many new tokens are scams or are clones of existing projects. Please exercise caution!
+</p>
 <table class="shadow-lg bg-gray-700">
 <tr>
   <th class="name bg-blue-900 text-white border text-left px-8 py-4 text-sm">Name</th>
@@ -6,8 +9,28 @@
   <th class="volume bg-blue-900 text-white border text-left px-8 py-4 text-sm">Volume</th>
 
 </tr>
+
 <tr v-for="token in newListings">
-  <td class="name border px-8 py-4 text-sm text-gray-100">${ token.name }</td>
+  <td class="name border px-8 py-4 text-sm text-gray-100">${ token.name }
+  <div class="token-audit">
+  <div class="token-audit-item" v-if="token.hasIdentifiedTeam === 'True'">
+    ✅&nbsp; Team
+  </div>
+  <div class="token-audit-item" v-if="token.hasIdentifiedTeam === 'False'">
+    ❗&nbsp; Anonymous
+  </div>
+  <div class="token-audit-item" v-if="token.isLiquidityLocked === 'True'">
+    ✅&nbsp; Liquidity Locked
+  </div>
+  <div class="token-audit-item" v-if="token.isAudited === 'True'">
+    ✅&nbsp; Audited
+  </div>
+  <div class="token-audit-item" v-if="token.isClone === 'True'">
+    ❗&nbsp; Clone
+  </div>
+
+  </div>
+</td>
   <td class="symbol border px-8 py-4 text-sm text-gray-100">${ token.symbol }</td>
   <td class="trades border px-4 text-center py-4 text-sm text-gray-100">added ${ token.addedDate }<br/>${ token.tradeCount } trades</td>
   <td class="volume border px-8 py-4 text-sm text-gray-100">${ token.tradeVolume }</td>
