@@ -13,7 +13,7 @@ class Token(db.Expando, Model):
     name = db.StringProperty(required=False)
     description = db.StringProperty(required=False)
     price = db.FloatProperty(required=False)
-    tradeCount = db.FloatProperty(required=False)
+    tradeCount = db.IntegerProperty(required=False)
     tradeVolume = db.FloatProperty(required=False)
     decimals = db.IntegerProperty(required=False)
     created = db.DateTimeProperty(required=False)
@@ -35,7 +35,7 @@ class Pair(db.Expando, Model):
     symbol = db.StringProperty(required=False)
     name = db.StringProperty(required=False)
     tradeVolume = db.FloatProperty(required=False)
-    tradeCount = db.FloatProperty(required=False)
+    tradeCount = db.IntegerProperty(required=False)
     created = db.DateTimeProperty(required=False)
     modified = db.DateTimeProperty(auto_now=True)
 
