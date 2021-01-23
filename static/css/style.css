@@ -23,3 +23,36 @@ height: 120px;
 .patrick-hand {
 	font-family: 'Patrick Hand', sans-serif;
 }
+
+th.name, td.name{
+	max-width: 200px;
+	word-wrap: break-word;
+}
+
+th.symbol, td.symbol{
+	max-width: 140px;
+	word-wrap: break-word;
+}
+
+th.volume, td.volume{
+	max-width: 140px;
+	word-wrap: break-word;
+}
+
+th.price, td.price{
+	max-width: 100px;
+	word-wrap: break-word;
+}
+
+th.trades, td.trades{
+	max-width: 140px;
+	word-wrap: break-word;
+}
+
+@media (max-width:1100px) {
+
+	#top-movers{
+		padding-left: 0;
+	}
+
+}

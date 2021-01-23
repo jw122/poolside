@@ -23,11 +23,12 @@ def one_inch_tokens():
         return request.json()
 
 def uniswap_tokens():
+  print("getting uniswap tokens")
   headers = {}
   query = """
   {
 
-    tokenDayDatas(first: 50, orderBy:dailyVolumeUSD, orderDirection:desc) {
+    tokenDayDatas(first: 100, orderBy:dailyVolumeUSD, orderDirection:desc) {
       id
       token {
         id
@@ -42,7 +43,6 @@ def uniswap_tokens():
       totalLiquidityUSD
       dailyVolumeUSD
       dailyTxns
-      priceUSD
     }
   }
   """
@@ -52,11 +52,13 @@ def uniswap_tokens():
   if request.status_code == 200:
       return request.json()
 
+
+
 def uniswap_new_tokens():
   headers = {}
   query = """
   {
-      pairs(first:20, orderBy:createdAtTimestamp, orderDirection:desc) {
+      pairs(first:50, orderBy:createdAtTimestamp, orderDirection:desc) {
         token0 {
           id
           symbol
