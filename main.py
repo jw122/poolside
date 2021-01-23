@@ -47,8 +47,7 @@ class NewListingsAPI(webapp2.RequestHandler):
     def get(self):
         NEW_LISTING_MAX_DAYS = 5
         new_listing_cutoff = datetime.datetime.now() - datetime.timedelta(days=NEW_LISTING_MAX_DAYS)
-        pairs = Pair.all().filter('created > ', new_listing_cutoff).fetch(100)
-        pairs.sort(reverse=True, key=lambda p: p.created)
+        pairs = Pair.all().filter('created > ', new_listing_cutoff).order('-created').fetch(100)
         api_response = {
             'pairs': [p.to_dict() for p in pairs]
         }
@@ -91,7 +90,7 @@ def fetch_one_inch():
         name=token['name'],
         symbol=token['symbol'],
         tradeVolume=float(token['tradeVolume']),
-        tradeCount=float(token['tradeCount']),
+        tradeCount=int(token['tradeCount']),
         decimals=int(token['decimals']),
         ))
     db.put(tokens)
@@ -109,7 +108,7 @@ def fetch_uniswap():
         symbol=token['symbol'],
         price=float(token_data.get('priceUSD', 0)),
         tradeVolume=float(token_data.get('dailyVolumeUSD',0)),
-        tradeCount=float(token_data.get('dailyTxns',0)),
+        tradeCount=int(token_data.get('dailyTxns',0)),
         decimals=int(token['decimals']),
         ))
     db.put(tokens)
@@ -132,7 +131,7 @@ def fetch_new():
         symbol=pair_symbol,
         name=pair_name,
         tradeVolume=float(pair['volumeUSD']),
-        tradeCount=float(pair['txCount']),
+        tradeCount=int(pair['txCount']),
         created=datetime.datetime.fromtimestamp(float(pair['createdAtTimestamp']))
         ))
     db.put(pairs)

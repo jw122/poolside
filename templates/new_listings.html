@@ -1,15 +1,15 @@
-
 <table class="shadow-lg bg-gray-700">
 <tr>
   <th class="name bg-blue-900 text-white border text-left px-8 py-4 text-sm">Name</th>
   <th class="symbol bg-blue-900 text-white border text-left px-8 py-4 text-sm">Symbol</th>
+  <th class="trades bg-blue-900 text-white border text-left px-8 py-4 text-sm">Activity</th>
   <th class="volume bg-blue-900 text-white border text-left px-8 py-4 text-sm">Volume</th>
-  <th class="price bg-blue-900 text-white border text-left px-8 py-4 text-sm">Price</th>
+
 </tr>
 <tr v-for="token in newListings">
-  <td class="name border px-8 py-4 text-sm text-gray-100">${ token.name } </td>
-  <td class="symbol border px-8 py-4 text-sm text-gray-100">${ token.symbol } </td>
+  <td class="name border px-8 py-4 text-sm text-gray-100">${ token.name }</td>
+  <td class="symbol border px-8 py-4 text-sm text-gray-100">${ token.symbol }</td>
+  <td class="trades border px-4 text-center py-4 text-sm text-gray-100">added ${ token.addedDate }<br/>${ token.tradeCount } trades</td>
   <td class="volume border px-8 py-4 text-sm text-gray-100">${ token.tradeVolume }</td>
-  <td class="price border px-8 py-4 text-sm text-gray-100">$0.0</td>
 </tr>
 </table>

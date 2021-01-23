@@ -44,6 +44,11 @@ th.price, td.price{
 	word-wrap: break-word;
 }
 
+th.trades, td.trades{
+	max-width: 140px;
+	word-wrap: break-word;
+}
+
 @media (max-width:1100px) {
 
 	#top-movers{

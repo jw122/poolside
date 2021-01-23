@@ -38,7 +38,7 @@ class Token(db.Expando, TokenModel):
     name = db.StringProperty(required=False)
     description = db.StringProperty(required=False)
     price = db.FloatProperty(required=False)
-    tradeCount = db.FloatProperty(required=False)
+    tradeCount = db.IntegerProperty(required=False)
     tradeVolume = db.FloatProperty(required=False)
     decimals = db.IntegerProperty(required=False)
     created = db.DateTimeProperty(required=False)
@@ -53,7 +53,7 @@ class Pair(db.Expando, TokenModel):
     symbol = db.StringProperty(required=False)
     name = db.StringProperty(required=False)
     tradeVolume = db.FloatProperty(required=False)
-    tradeCount = db.FloatProperty(required=False)
+    tradeCount = db.IntegerProperty(required=False)
     created = db.DateTimeProperty(required=False)
     modified = db.DateTimeProperty(auto_now=True)
 
@@ -63,4 +63,9 @@ class Pair(db.Expando, TokenModel):
         pair_dict['name'] =  token_from_pair_name(pair_dict['name'])
         pair_dict['pair-symbol'] =  token_from_pair_symbol(pair_dict['symbol'])
         pair_dict['symbol'] = pair_dict['symbol']
+        pair_dict['addedDate'] = self.addedDate
         return pair_dict
+
+    @property
+    def addedDate(self):
+        return self.created.strftime('%b %d')
