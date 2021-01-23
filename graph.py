@@ -43,6 +43,7 @@ def uniswap_tokens():
       totalLiquidityUSD
       dailyVolumeUSD
       dailyTxns
+      priceUSD
     }
   }
   """
