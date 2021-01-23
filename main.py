@@ -1,8 +1,9 @@
 import logging
 import webapp2
 from google.appengine.ext.webapp import template
-from models import Token, Pair
+from model import Token, Pair, ascii_printable
 import graph
+import search
 from google.appengine.ext import db
 import datetime
 import json
@@ -17,8 +18,27 @@ class UpdateData(webapp2.RequestHandler):
         # top movers
         uniswap_tokens = fetch_uniswap()
         one_inch_tokens = fetch_one_inch()
+
         # new tokens
         new_listings = fetch_new()
+
+        token_names = []
+        documents = []
+        for token_list in [new_listings, uniswap_tokens, one_inch_tokens]:
+            for token in token_list:
+                logging.info('token key name: %s' % token.key().name())
+                if token.key().name() not in token_names:
+                    token_names.append(token.key().name())
+                    search_fields = [
+                        { 'name': 'name', 'value': token.name.split(',')[0], 'tokenize': True },
+                        { 'name': 'symbol', 'value': token.symbol, 'tokenize': False  },
+                    ]
+                    documents.append(search.create_document(token.key().name(), search_fields))
+                else:
+                    logging.warning('token document already created: %s' % token.key().name())
+
+        if documents:
+            search.add_documents_to_index('tokens', documents)
 
         tokens = uniswap_tokens + one_inch_tokens + new_listings
         self.response.out.write('Saved %s tokens' % len(tokens))
@@ -27,7 +47,7 @@ class NewListingsAPI(webapp2.RequestHandler):
     def get(self):
         NEW_LISTING_MAX_DAYS = 5
         new_listing_cutoff = datetime.datetime.now() - datetime.timedelta(days=NEW_LISTING_MAX_DAYS)
-        pairs = Pair.all().filter('created > ', new_listing_cutoff).order('-created').fetch(10)
+        pairs = Pair.all().filter('created > ', new_listing_cutoff).order('-created').fetch(100)
         api_response = {
             'pairs': [p.to_dict() for p in pairs]
         }
@@ -36,9 +56,7 @@ class NewListingsAPI(webapp2.RequestHandler):
 
 class TopMoversAPI(webapp2.RequestHandler):
     def get(self):
-        NEW_LISTING_MAX_DAYS = 5
-        new_listing_cutoff = datetime.datetime.now() - datetime.timedelta(days=NEW_LISTING_MAX_DAYS)
-        tokens = Token.all().order('-tradeVolume').fetch(10)
+        tokens = Token.all().order('-tradeVolume').fetch(100)
         api_response = {
             'tokens': [t.to_dict() for t in tokens]
         }
@@ -56,12 +74,28 @@ class TokenAPI(webapp2.RequestHandler):
         self.response.out.write(json.dumps(api_response))
 
 
+class SearchAPI(webapp2.RequestHandler):
+    def get(self):
+        documents = search.query_index('tokens', self.request.get('keyword'))
+        logging.info(documents)
+        if documents:
+            tokens = [t.to_dict() for t in Token.get_by_key_name([document.doc_id for document in documents]) if t]
+            tokens.extend([t.to_dict() for t in Pair.get_by_key_name([document.doc_id for document in documents]) if t])
+        else:
+            tokens = []
+        api_response = {
+            'tokens': tokens
+        }
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps(api_response))
+
+
 def fetch_one_inch():
     print("fetching data from 1inch")
     subgraph_response = graph.one_inch_tokens()
     tokens = []
     for token in subgraph_response['data']['tokens']:
-        tokens.append(Token(key_name=token['id'],
+        tokens.append(Token(key_name=ascii_printable(token['id']),
         id=token['id'],
         name=token['name'],
         symbol=token['symbol'],
@@ -78,13 +112,13 @@ def fetch_uniswap():
     tokens = []
     for token_data in subgraph_response['data']['tokenDayDatas']:
         token = token_data['token']
-        tokens.append(Token(key_name=token['id'],
+        tokens.append(Token(key_name=(token['id']),
         id=token['id'],
         name=token['name'],
         symbol=token['symbol'],
-        price=float(token_data['priceUSD']),
-        tradeVolume=float(token_data['dailyVolumeUSD']),
-        tradeCount=int(token_data['dailyTxns']),
+        price=float(token_data.get('priceUSD', 0)),
+        tradeVolume=float(token_data.get('dailyVolumeUSD',0)),
+        tradeCount=int(token_data.get('dailyTxns',0)),
         decimals=int(token['decimals']),
         ))
     db.put(tokens)
@@ -102,7 +136,7 @@ def fetch_new():
         pair_name = token0['name'] + ', ' + token1['name']
         print("getting pair: ", pair_name)
 
-        pairs.append(Pair(key_name=pair_symbol,
+        pairs.append(Pair(key_name=ascii_printable(pair_symbol),
         id=pair['id'],
         symbol=pair_symbol,
         name=pair_name,
@@ -125,6 +159,7 @@ application = webapp2.WSGIApplication([
     ('/update-data', UpdateData),
     ('/api/new-listings', NewListingsAPI),
     ('/api/top-movers', TopMoversAPI),
-    ('/api/token', TokenAPI)
+    ('/api/token', TokenAPI),
+    ('/api/search', SearchAPI),
 ], debug=True)
 application.error_handlers[404] = handle_404

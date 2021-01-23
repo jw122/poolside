@@ -42,3 +42,4 @@ from google.appengine.api import xmpp
 from google.appengine.api import urlfetch
 
 import json
+from model import Pair, Token
