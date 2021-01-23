@@ -1,12 +1,13 @@
 import logging
 from google.appengine.api import search
-from models import token_from_pair_name, token_from_pair_symbol
+from model import token_from_pair_name, token_from_pair_symbol
 
 def create_document(id, search_fields):
     def formatValue(field):
         value = token_from_pair_symbol((token_from_pair_name(field['value'])))
-        logging.info('formatted value: %s' % value)
-        return ','.join(tokenize_autocomplete(value)) if field.get('tokenize') else value
+        formatted_value = ','.join(tokenize_autocomplete(value)) if field.get('tokenize') else value
+        logging.info('formatted value: %s' % formatted_value)
+        return formatted_value
 
     fields = [
         search.TextField(name=field['name'], value=formatValue(field)) for field in search_fields
