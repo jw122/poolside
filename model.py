@@ -80,4 +80,3 @@ class Pair(db.Expando, TokenModel):
     @property
     def addedDate(self):
         return self.created.strftime('%b %d')
-        return self.created.strftime('%b %d')
