@@ -64,9 +64,8 @@ class TopMoversAPI(webapp2.RequestHandler):
         self.response.out.write(json.dumps(api_response))
 
 class TokenAPI(webapp2.RequestHandler):
-    def get(self):
-        id = self.request.get("id")
-        [token] = Token.all().filter('id =', id).fetch(1)
+    def get(self, token_id):
+        token = Token.get_by_key_name(token_id)
         api_response = {
             'token': token.to_dict()
         }
@@ -155,11 +154,11 @@ def handle_404(request, response, exception):
 
 
 application = webapp2.WSGIApplication([
-    ('/', Index),
-    ('/update-data', UpdateData),
-    ('/api/new-listings', NewListingsAPI),
-    ('/api/top-movers', TopMoversAPI),
-    ('/api/token', TokenAPI),
-    ('/api/search', SearchAPI),
+    webapp2.Route('/', Index),
+    webapp2.Route('/update-data', UpdateData),
+    webapp2.Route('/api/new-listings', NewListingsAPI),
+    webapp2.Route('/api/top-movers', TopMoversAPI),
+    webapp2.Route(r'/api/token/<token_id>', handler=TokenAPI, name='token_id'),
+    webapp2.Route('/api/search', SearchAPI),
 ], debug=True)
 application.error_handlers[404] = handle_404
