@@ -45,6 +45,16 @@ class TopMoversAPI(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(api_response))
 
+class TokenAPI(webapp2.RequestHandler):
+    def get(self):
+        id = self.request.get("id")
+        [token] = Token.all().filter('id =', id).fetch(1)
+        api_response = {
+            'token': token.to_dict()
+        }
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps(api_response))
+
 
 def fetch_one_inch():
     print("fetching data from 1inch")
@@ -115,5 +125,6 @@ application = webapp2.WSGIApplication([
     ('/update-data', UpdateData),
     ('/api/new-listings', NewListingsAPI),
     ('/api/top-movers', TopMoversAPI),
+    ('/api/token', TokenAPI)
 ], debug=True)
 application.error_handlers[404] = handle_404
