@@ -16,7 +16,9 @@ def token_from_pair_symbol(n):
 
 class Model():
     def to_dict(self):
-       return dict([(p, unicode(getattr(self, '%s_to_dict' % p, getattr(self, p)))) for p in self.properties()])
+       entity = dict([(p, unicode(getattr(self, '%s_to_dict' % p, getattr(self, p)))) for p in self.properties()])
+       entity['keyName'] = self.key().name()
+       return entity
 
 
 class TokenModel(Model):

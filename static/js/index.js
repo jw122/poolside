@@ -54,6 +54,7 @@ $(function(){
   el: '#tokens',
   delimiters: ['${', '}'],
   data: {
+    isAdmin: $.isAdmin,
     newListings: [],
     topMovers: [],
     searchResults: []
@@ -64,5 +65,23 @@ loadNewListings();
 loadTopMovers();
 
 searchBar();
+
+$('#tokens').click(function(e){
+  var parent = $(e.target).parent();
+  if (parent.hasClass('admin-action')){
+    $.ajax({
+        type: "POST",
+        url: "/admin/admin-action",
+        data: {
+            'action' : parent.attr('data-action'),
+            'pair': parent.parents('td').attr('data-token')
+        },
+        success: function(response){
+          loadNewListings();
+        }
+    });
+
+  }
+});
 
 });

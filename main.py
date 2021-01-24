@@ -10,7 +10,9 @@ import json
 
 class Index(webapp2.RequestHandler):
     def get(self):
-        self.response.out.write(template.render('templates/index.html', {}))
+        self.response.out.write(template.render('templates/index.html', {
+            'isAdmin': self.request.path == '/admin'
+        }))
 
 
 class UpdateData(webapp2.RequestHandler):
@@ -88,6 +90,14 @@ class SearchAPI(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(api_response))
 
+class AdminAction(webapp2.RequestHandler):
+    def post(self):
+        pair = Pair.get_by_key_name(self.request.get('pair'))
+        if self.request.get('action') == 'hasAnonymousTeam':
+            pair.hasIdentifiedTeam = False
+        else:
+            setattr(pair, self.request.get('action'), True)
+        pair.put()
 
 def fetch_one_inch():
     print("fetching data from 1inch")
@@ -155,10 +165,12 @@ def handle_404(request, response, exception):
 
 application = webapp2.WSGIApplication([
     webapp2.Route('/', Index),
+    webapp2.Route('/admin', Index),
     webapp2.Route('/update-data', UpdateData),
     webapp2.Route('/api/new-listings', NewListingsAPI),
     webapp2.Route('/api/top-movers', TopMoversAPI),
     webapp2.Route(r'/api/token/<token_id>', handler=TokenAPI, name='token_id'),
     webapp2.Route('/api/search', SearchAPI),
+    webapp2.Route('/admin/admin-action', AdminAction),
 ], debug=True)
 application.error_handlers[404] = handle_404

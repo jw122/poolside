@@ -59,6 +59,16 @@ th.trades, td.trades{
 .token-audit-item:first-child{
 	margin-top: 8px;
 }
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu ul, .dropdown-menu li, .dropdown-menu li a{
+	z-index: 1000;
+	position: relative;
+}
+
 @media (max-width:1100px) {
 
 	#top-movers{
