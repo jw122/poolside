@@ -3,9 +3,11 @@ import webapp2
 from google.appengine.ext.webapp import template
 from model import Token, Pair, ascii_printable
 import graph
+import token_metadata
 import search
 from google.appengine.ext import db
 import datetime
+import time
 import json
 
 class Index(webapp2.RequestHandler):
@@ -111,15 +113,41 @@ def fetch_uniswap():
     tokens = []
     for token_data in subgraph_response['data']['tokenDayDatas']:
         token = token_data['token']
-        tokens.append(Token(key_name=(token['id']),
-        id=token['id'],
-        name=token['name'],
-        symbol=token['symbol'],
-        price=float(token_data.get('priceUSD', 0)),
-        tradeVolume=float(token_data.get('dailyVolumeUSD',0)),
-        tradeCount=int(token_data.get('dailyTxns',0)),
-        decimals=int(token['decimals']),
-        ))
+
+        symbol = token['symbol']
+        new_token = Token(
+            key_name=(token['id']),
+            id=token['id'],
+            name=token['name'],
+            symbol=symbol,
+            price=float(token_data.get('priceUSD', 0)),
+            tradeVolume=float(token_data.get('dailyVolumeUSD',0)),
+            tradeCount=int(token_data.get('dailyTxns',0)),
+            decimals=int(token['decimals']),
+        )
+
+        # TODO: only get metadata if not already in DB
+        metadata = token_metadata.get_metadata(symbol)
+        # rate limit
+        time.sleep(2)
+        
+        if 'data' in metadata:
+            
+            info = metadata['data'][symbol]
+            print("getting info for " + symbol)
+
+            new_token.website = info['urls']['website'][0]
+            new_token.logo = info['logo']
+            
+            new_token.description = info['description']
+            if len(info['urls']['technical_doc']) > 0:
+                new_token.whitepaper = info['urls']['technical_doc'][0]
+            if len(info['urls']['twitter']) > 0:
+                new_token.twitter = info['urls']['twitter'][0]
+            new_token.created = datetime.datetime.strptime(info['date_added'], "%Y-%m-%dT%H:%M:%S.%fZ")
+            
+
+        tokens.append(new_token)
     db.put(tokens)
     return tokens
 

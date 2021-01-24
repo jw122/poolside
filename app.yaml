@@ -2,31 +2,29 @@ runtime: python27
 api_version: 1
 threadsafe: no
 handlers:
+  ### CONSOLE ###
 
+  - url: /console/static
+    static_dir: console/app/view/static
 
+  - url: /console.*
+    script: console/app/console.py
+    login: admin
 
-### CONSOLE ###
+  - url: /favicon\.ico
+    static_files: static/img/favicon/favicon.ico
+    upload: static/img/favicon/favicon\.ico
 
-- url: /console/static
-  static_dir: console/app/view/static
+  - url: /static/
+    static_dir: static
 
-- url: /console.*
-  script: console/app/console.py
-  login: admin
-
-
-- url: /favicon\.ico
-  static_files: static/img/favicon/favicon.ico
-  upload: static/img/favicon/favicon\.ico
-
-- url: /static/
-  static_dir: static
-
-
-- url: /.*
-  secure: always
-  script: main.application
+  - url: /.*
+    secure: always
+    script: main.application
 
 libraries:
-- name: ssl
-  version: latest
+  - name: ssl
+    version: latest
+
+includes:
+  - env_variables.yaml
