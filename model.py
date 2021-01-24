@@ -69,3 +69,21 @@ class Pair(db.Expando, TokenModel):
     @property
     def addedDate(self):
         return self.created.strftime('%b %d')
+
+class Setting(db.Expando):
+    # key_name is id
+    id = db.StringProperty()
+    value = db.StringProperty(required=False)
+
+def update_setting(id, value):
+    setting = Setting.get_by_key_name(id)
+    if not setting:
+        setting = Setting(key_name=id, id=id)
+    setting.value = value
+    setting.put()
+    return setting.value
+
+def get_setting(id):
+    setting = Setting.get_by_key_name(id)
+    if setting:
+        return setting.value
