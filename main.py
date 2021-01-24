@@ -21,7 +21,9 @@ class UpdateData(webapp2.RequestHandler):
     def get(self):
         # top movers
         uniswap_tokens = fetch_uniswap()
-        one_inch_tokens = fetch_one_inch()
+
+        # NOTE: temporarily commented out since we're using uniswap for top movers
+        # one_inch_tokens = fetch_one_inch()
 
         # new tokens
         new_listings = fetch_new()
@@ -44,7 +46,7 @@ class UpdateData(webapp2.RequestHandler):
         if documents:
             search.add_documents_to_index('tokens', documents)
 
-        tokens = uniswap_tokens + one_inch_tokens + new_listings
+        tokens = uniswap_tokens + new_listings
         self.response.out.write('Saved %s tokens' % len(tokens))
 
 class NewListingsAPI(webapp2.RequestHandler):
@@ -113,18 +115,17 @@ def fetch_uniswap():
     print("fetching data from uniswap")
     subgraph_response = graph.uniswap_tokens()
     tokens = []
-    for token_data in subgraph_response['data']['tokenDayDatas']:
-        token = token_data['token']
-
+    for token in subgraph_response['data']['tokens']:
         symbol = token['symbol']
         new_token = Token(
             key_name=(token['id']),
             id=token['id'],
             name=token['name'],
             symbol=symbol,
-            price=float(token_data.get('priceUSD', 0)),
-            tradeVolume=float(token_data.get('dailyVolumeUSD',0)),
-            tradeCount=int(token_data.get('dailyTxns',0)),
+            # TODO: this is not available through uniswap. get it elsewhere
+            # price=float(token_data.get('priceUSD', 0)),
+            tradeVolume=float(token.get('tradeVolumeUSD',0)),
+            tradeCount=int(token.get('txCount',0)),
             decimals=int(token['decimals']),
         )
 
@@ -134,8 +135,8 @@ def fetch_uniswap():
         time.sleep(2)
         
         if 'data' in metadata:
-            
-            info = metadata['data'][symbol]
+            print("processing data for ", symbol)
+            info = metadata['data'][symbol.upper()]
             print("got info from CMC", info)
 
             new_token.website = info['urls']['website'][0]

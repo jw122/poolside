@@ -28,22 +28,13 @@ def uniswap_tokens():
   query = """
   {
 
-    tokenDayDatas(first: 50, orderBy:dailyVolumeUSD, orderDirection:desc) {
+    tokens(first: 20, orderBy:tradeVolumeUSD, orderDirection:desc) {
       id
-      token {
-        id
-        symbol
-        name
-        decimals
-        tradeVolumeUSD
-        txCount
-      }
-
-      date
-      totalLiquidityUSD
-      dailyVolumeUSD
-      dailyTxns
-      priceUSD
+      symbol
+      name
+      decimals
+      tradeVolumeUSD
+      txCount
     }
   }
   """
