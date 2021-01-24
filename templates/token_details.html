@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Poolside: 🆕 & 🔥 DeFi Tokens</title>
+    <title><a href="/">Poolside: 🆕 & 🔥 DeFi Tokens</a> </title>
     <meta name="viewport" content="width=620, initial-scale=1">
     <!-- Link to your stylesheet here -->
     <link rel="stylesheet" href="/static/css/tailwind.min.css">
@@ -13,7 +13,7 @@
     <script type="text/javascript">
 
     </script>
-
+    <script src="https://kit.fontawesome.com/84903da61a.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="bg-gray-800">
@@ -22,19 +22,35 @@
 
     <div class="container token-details">
         <img src="{{ token.logo }}" alt="">
-        {{ token.name }}
+        <h3>
+            {{ token.name }}
+        </h3>
+
+        {% if token.description %}
         <p>
             {{ token.description }}
         </p>
+        {% endif %}
+
+        {% if token.whitepaper %}
         <p>
-            {{ token.whitepaper }}
+            <i class="fas fa-scroll"></i> Whitepaper: {{ token.whitepaper }}
         </p>
+        {% endif %}
+
+        {% if token.website %}
         <p>
-            {{ token.website }}
+            <i class="fas fa-link"></i> Website: {{ token.website }}
         </p>
+        {% endif %}
+
+        {% if token.twitter %}
         <p>
-            {{ token.twitter }}
+            <i class="fab fa-twitter"></i> Twitter: {{ token.twitter }}
         </p>
+        {% endif %}
+
+
     </div>
 
     {% include "footer.html" %}
