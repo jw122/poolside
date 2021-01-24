@@ -6,9 +6,11 @@ import graph
 import token_metadata
 import search
 from google.appengine.ext import db
+from google.appengine.ext.webapp import template
 import datetime
 import time
 import json
+import os
 
 class Index(webapp2.RequestHandler):
     def get(self):
@@ -71,8 +73,8 @@ class TokenAPI(webapp2.RequestHandler):
         api_response = {
             'token': token.to_dict()
         }
-        self.response.headers['Content-Type'] = 'application/json'
-        self.response.out.write(json.dumps(api_response))
+        path = os.path.join(os.path.dirname(__file__), 'templates/token_details.html')
+        self.response.out.write(template.render(path, {'token': token}))
 
 
 class SearchAPI(webapp2.RequestHandler):
