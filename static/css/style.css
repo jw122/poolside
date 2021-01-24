@@ -54,10 +54,24 @@ td.trades {
   word-wrap: break-word;
 }
 
-@media (max-width: 1100px) {
-  #top-movers {
-    padding-left: 0;
-  }
+.token-audit{
+	font-size: 0.8em;
+}
+
+.token-audit-item{
+	margin-top: 2px;
+}
+.token-audit-item:first-child{
+	margin-top: 8px;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu ul, .dropdown-menu li, .dropdown-menu li a{
+	z-index: 1000;
+	position: relative;
 }
 
 .token-details {
@@ -65,4 +79,13 @@ td.trades {
   margin-top: 15%;
   margin-left: 5%;
   color: white;
+}
+
+
+@media (max-width:1100px) {
+
+	#top-movers{
+		padding-left: 0;
+	}
+
 }

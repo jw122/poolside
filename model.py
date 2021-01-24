@@ -16,7 +16,10 @@ def token_from_pair_symbol(n):
 
 class Model():
     def to_dict(self):
-       return dict([(p, unicode(getattr(self, '%s_to_dict' % p, getattr(self, p)))) for p in self.properties()])
+       entity = dict([(p, unicode(getattr(self, '%s_to_dict' % p, getattr(self, p)))) for p in self.properties()])
+       entity['keyName'] = self.key().name()
+       return entity
+
 
 class TokenModel(Model):
 
@@ -27,7 +30,7 @@ class TokenModel(Model):
         if self.tradeVolume > 10000:
             return '%sk' %  math.floor(self.tradeVolume/1000)
         elif self.tradeVolume:
-            return '%s' % self.tradeVolume
+            return '%s' % int(self.tradeVolume)
         else:
             return ''
 
@@ -61,6 +64,16 @@ class Pair(db.Expando, TokenModel):
     tradeCount = db.IntegerProperty(required=False)
     created = db.DateTimeProperty(required=False)
     modified = db.DateTimeProperty(auto_now=True)
+
+    hasIdentifiedTeam = db.BooleanProperty(required=False)
+    isLiquidityLocked = db.BooleanProperty(required=False)
+    hasWebsite = db.BooleanProperty(required=False)
+    hasInvestors = db.BooleanProperty(required=False)
+    hasWhitepaper = db.BooleanProperty(required=False)
+    isAudited = db.BooleanProperty(required=False)
+    isClone = db.BooleanProperty(required=False)
+    age = db.IntegerProperty(required=False) #  months?
+
 
     def to_dict(self):
         pair_dict = super(Pair, self).to_dict()
