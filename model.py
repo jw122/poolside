@@ -44,6 +44,10 @@ class Token(db.Expando, TokenModel):
     created = db.DateTimeProperty(required=False)
     modified = db.DateTimeProperty(auto_now=True)
 
+    website = db.StringProperty(required=False)
+    logo = db.StringProperty(required=False)
+    whitepaper_url = db.StringProperty(required=False)
+    twitter = db.StringProperty(required=False)
 
 
 

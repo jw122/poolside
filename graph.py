@@ -28,7 +28,7 @@ def uniswap_tokens():
   query = """
   {
 
-    tokenDayDatas(first: 100, orderBy:dailyVolumeUSD, orderDirection:desc) {
+    tokenDayDatas(first: 50, orderBy:dailyVolumeUSD, orderDirection:desc) {
       id
       token {
         id
@@ -43,6 +43,7 @@ def uniswap_tokens():
       totalLiquidityUSD
       dailyVolumeUSD
       dailyTxns
+      priceUSD
     }
   }
   """
