@@ -25,6 +25,3 @@ handlers:
 libraries:
   - name: ssl
     version: latest
-
-includes:
-  - env_variables.yaml

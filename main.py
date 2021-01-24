@@ -134,7 +134,7 @@ def fetch_uniswap():
         if 'data' in metadata:
             
             info = metadata['data'][symbol]
-            print("getting info for " + symbol)
+            print("got info from CMC", info)
 
             new_token.website = info['urls']['website'][0]
             new_token.logo = info['logo']

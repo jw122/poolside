@@ -1,11 +1,11 @@
 from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
-import os
+import model
 
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/info'
 
-api_key = os.environ.get('CMC_API_KEY')
+api_key = model.get_setting('CMC_API_KEY')
 
 headers = {
   'Accepts': 'application/json',
@@ -18,8 +18,9 @@ def get_metadata(symbol):
   parameters = {
     'symbol': symbol
   }
-
+  
   try:
+    print("fetching info for " + symbol)
     response = session.get(url, params=parameters)
     data = json.loads(response.text)
     if data['status']['error_message']:
