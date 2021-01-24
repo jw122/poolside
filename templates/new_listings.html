@@ -1,3 +1,6 @@
+<p class="text-sm text-white -mt-2 mb-4">
+  ⚠️ &nbsp; Many new tokens are scams or are clones of existing projects. Please exercise caution!
+</p>
 <table class="shadow-lg bg-gray-700">
 <tr>
   <th class="name bg-blue-900 text-white border text-left px-8 py-4 text-sm">Name</th>
@@ -6,8 +9,12 @@
   <th class="volume bg-blue-900 text-white border text-left px-8 py-4 text-sm">Volume</th>
 
 </tr>
+
 <tr v-for="token in newListings">
-  <td class="name border px-8 py-4 text-sm text-gray-100">${ token.name }</td>
+  <td v-bind:data-token="token.keyName" class="name border px-8 py-4 text-sm text-gray-100">${ token.name }
+    {% include "admin_options.html" %}
+    {% include "token_audit.html" %}
+</td>
   <td class="symbol border px-8 py-4 text-sm text-gray-100">${ token.symbol }</td>
   <td class="trades border px-4 text-center py-4 text-sm text-gray-100">added ${ token.addedDate }<br/>${ token.tradeCount } trades</td>
   <td class="volume border px-8 py-4 text-sm text-gray-100">${ token.tradeVolume }</td>
