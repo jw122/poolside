@@ -48,6 +48,7 @@ class Token(db.Expando, TokenModel):
     logo = db.StringProperty(required=False)
     whitepaper_url = db.StringProperty(required=False)
     twitter = db.StringProperty(required=False)
+    explorer_url = db.StringProperty(required=False)
 
 
 

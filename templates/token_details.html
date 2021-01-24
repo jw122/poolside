@@ -34,19 +34,29 @@
 
         {% if token.whitepaper %}
         <p>
-            <i class="fas fa-scroll"></i> Whitepaper: {{ token.whitepaper }}
+
+            <a href="{{ token.whitepaper }}"><i class="fas fa-scroll"></i> Whitepaper</a>
+
         </p>
         {% endif %}
 
         {% if token.website %}
         <p>
-            <i class="fas fa-link"></i> Website: {{ token.website }}
+            <a href="{{ token.website }}"><i class="fas fa-link"></i> Website</a>
+
+        </p>
+        {% endif %}
+
+        {% if token.explorer_url %}
+        <p>
+            <a href="{{ token.explorer_url }}"><i class="fas fa-search"></i> Explorer</a>
         </p>
         {% endif %}
 
         {% if token.twitter %}
         <p>
-            <i class="fab fa-twitter"></i> Twitter: {{ token.twitter }}
+            <a href="{{ token.twitter }}"><i class="fab fa-twitter"></i> Twitter</a>
+
         </p>
         {% endif %}
 

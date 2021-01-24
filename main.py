@@ -30,7 +30,7 @@ class UpdateData(webapp2.RequestHandler):
 
         token_names = []
         documents = []
-        for token_list in [new_listings, uniswap_tokens, one_inch_tokens]:
+        for token_list in [new_listings, uniswap_tokens]:
             for token in token_list:
                 logging.info('token key name: %s' % token.key().name())
                 if token.key().name() not in token_names:
@@ -147,6 +147,8 @@ def fetch_uniswap():
                 new_token.whitepaper = info['urls']['technical_doc'][0]
             if len(info['urls']['twitter']) > 0:
                 new_token.twitter = info['urls']['twitter'][0]
+            if len(info['urls']['explorer']) > 0:
+                new_token.explorer_url = info['urls']['explorer'][0]
             new_token.created = datetime.datetime.strptime(info['date_added'], "%Y-%m-%dT%H:%M:%S.%fZ")
             
 
