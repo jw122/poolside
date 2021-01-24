@@ -6,9 +6,11 @@ import graph
 import token_metadata
 import search
 from google.appengine.ext import db
+from google.appengine.ext.webapp import template
 import datetime
 import time
 import json
+import os
 
 class Index(webapp2.RequestHandler):
     def get(self):
@@ -21,14 +23,16 @@ class UpdateData(webapp2.RequestHandler):
     def get(self):
         # top movers
         uniswap_tokens = fetch_uniswap()
-        one_inch_tokens = fetch_one_inch()
+
+        # NOTE: temporarily commented out since we're using uniswap for top movers
+        # one_inch_tokens = fetch_one_inch()
 
         # new tokens
         new_listings = fetch_new()
 
         token_names = []
         documents = []
-        for token_list in [new_listings, uniswap_tokens, one_inch_tokens]:
+        for token_list in [new_listings, uniswap_tokens]:
             for token in token_list:
                 logging.info('token key name: %s' % token.key().name())
                 if token.key().name() not in token_names:
@@ -44,7 +48,7 @@ class UpdateData(webapp2.RequestHandler):
         if documents:
             search.add_documents_to_index('tokens', documents)
 
-        tokens = uniswap_tokens + one_inch_tokens + new_listings
+        tokens = uniswap_tokens + new_listings
         self.response.out.write('Saved %s tokens' % len(tokens))
 
 class NewListingsAPI(webapp2.RequestHandler):
@@ -73,8 +77,8 @@ class TokenAPI(webapp2.RequestHandler):
         api_response = {
             'token': token.to_dict()
         }
-        self.response.headers['Content-Type'] = 'application/json'
-        self.response.out.write(json.dumps(api_response))
+        path = os.path.join(os.path.dirname(__file__), 'templates/token_details.html')
+        self.response.out.write(template.render(path, {'token': token}))
 
 
 class SearchAPI(webapp2.RequestHandler):
@@ -121,18 +125,17 @@ def fetch_uniswap():
     print("fetching data from uniswap")
     subgraph_response = graph.uniswap_tokens()
     tokens = []
-    for token_data in subgraph_response['data']['tokenDayDatas']:
-        token = token_data['token']
-
+    for token in subgraph_response['data']['tokens']:
         symbol = token['symbol']
         new_token = Token(
             key_name=(token['id']),
             id=token['id'],
             name=token['name'],
             symbol=symbol,
-            price=float(token_data.get('priceUSD', 0)),
-            tradeVolume=float(token_data.get('dailyVolumeUSD',0)),
-            tradeCount=int(token_data.get('dailyTxns',0)),
+            # TODO: this is not available through uniswap. get it elsewhere
+            # price=float(token_data.get('priceUSD', 0)),
+            tradeVolume=float(token.get('tradeVolumeUSD',0)),
+            tradeCount=int(token.get('txCount',0)),
             decimals=int(token['decimals']),
         )
 
@@ -142,8 +145,8 @@ def fetch_uniswap():
         time.sleep(2)
         
         if 'data' in metadata:
-            
-            info = metadata['data'][symbol]
+            print("processing data for ", symbol)
+            info = metadata['data'][symbol.upper()]
             print("got info from CMC", info)
 
             new_token.website = info['urls']['website'][0]
@@ -154,6 +157,8 @@ def fetch_uniswap():
                 new_token.whitepaper = info['urls']['technical_doc'][0]
             if len(info['urls']['twitter']) > 0:
                 new_token.twitter = info['urls']['twitter'][0]
+            if len(info['urls']['explorer']) > 0:
+                new_token.explorer_url = info['urls']['explorer'][0]
             new_token.created = datetime.datetime.strptime(info['date_added'], "%Y-%m-%dT%H:%M:%S.%fZ")
             
 
