@@ -81,7 +81,28 @@ td.trades {
   color: white;
 }
 
+.pagination{
+	padding: 10px;
+}
 
+li.page-item{
+	display: inline;
+}
+button.page-link {
+	display: inline-block;
+}
+button.page-link {
+    color: #29b3ed;
+    font-weight: 500;
+}
+
+.page-number{
+	padding: 0 2px;
+}
+
+.page-number.active{
+	font-weight: bold;
+}
 @media (max-width:1100px) {
 
 	#top-movers{
