@@ -11,7 +11,7 @@
         </div>
         <button id="analyze" class="inline-flex text-white bg-blue-900 border-0 py-2 px-6 focus:outline-none hover:bg-blue-700 font-bold rounded text-lg">Search</button>
         -->
-        <div class="shadow py-4 flex xl:w-1/2 lg:w-1/2 md:w-full sm:w-full">
+        <div class="shadow py-4 flex xl:w-1/2 lg:w-1/2 md:w-1/2 sm:w-full">
           <button class="bg-blue-50 hover:bg-blue-100 rounded text-white p-2 px-2 ml-0 mr-2">
                   <p class="font-semibold text-2xl">🔍</p>
           </button>
@@ -21,7 +21,7 @@
       </div>
 
       <div v-if="searchResults.length > 0" id="search-results" class="xl:w-full lg:w-full md:w-full pb-6">
-        <div class="divide-y-2 divide-gray-300 divide-solid">
+        <div class="xl:w-1/2 lg:w-1/2 md:w-1/2  divide-y-2 divide-gray-300 divide-solid">
             {% include "search_results.html" %}
         </div>
       </div>
@@ -32,7 +32,7 @@
 
       <div id="new-listings" class="xl:w-1/2 lg:w-1/2 md:w-full py-6">
         <h2 class="text-2xl sm:text-2xl text-gray-50 font-medium title-font font-bold mb-2">🆕 New Listings</h2>
-        <div class="divide-y-2 divide-gray-300 divide-solid">
+        <div class="new-listings-inner divide-y-2 divide-gray-300 divide-solid">
             {% include "new_listings.html" %}
         </div>
       </div>
@@ -41,6 +41,14 @@
         <h2 class="text-2xl sm:text-2xl text-gray-50 font-medium title-font font-bold mb-2">🔥 Top Movers</h2>
         <div class="divide-y-2 divide-gray-300 divide-solid">
             {% include "top_movers.html" %}
+        </div>
+
+      </div>
+
+      <div id="nfts" class="xl:w-full lg:w-full md:w-full py-6 pl-10">
+        <h2 class="text-2xl sm:text-2xl text-gray-50 font-medium title-font font-bold mb-2">👾 NFTs</h2>
+        <div class="divide-y-2 divide-gray-300 divide-solid">
+            {% include "nfts.html" %}
         </div>
 
       </div>

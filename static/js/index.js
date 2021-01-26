@@ -69,7 +69,14 @@ $(function(){
 			perPage: 10,
 			pages: [],
     },
-    searchResults: []
+    searchResults: [],
+    aavegotchis: Array(12).fill({
+      name: 'asd'
+    })
+  },
+  components: {
+    	'carousel': VueCarousel.Carousel,
+      'slide': VueCarousel.Slide
   },
   methods:{
   		setPages (list) {

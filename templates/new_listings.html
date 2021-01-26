@@ -1,24 +1,29 @@
-<p class="text-sm text-white -mt-2 mb-4">
-  ⚠️ &nbsp; Many new tokens are scams or are clones of existing projects. Please exercise caution!
+<p class="new-listing-warning text-sm text-white -mt-2 mb-4">
+  ⚠️ &nbsp; Caution: Many new tokens are scams, clones or rugpulls.
 </p>
 <table class="shadow-lg bg-gray-700">
+<thead>
 <tr>
   <th class="name bg-blue-900 text-white border text-left px-8 py-4 text-sm">Name</th>
   <th class="symbol bg-blue-900 text-white border text-left px-8 py-4 text-sm">Symbol</th>
   <th class="trades bg-blue-900 text-white border text-left px-8 py-4 text-sm">Activity</th>
   <th class="volume bg-blue-900 text-white border text-left px-8 py-4 text-sm">Volume</th>
-
 </tr>
-
+</thead>
+<tbody>
 <tr v-for="token in displayedNewListings">
-  <td v-bind:data-token="token.keyName" class="name border px-8 py-4 text-sm text-gray-100">${ token.name }
+  <td v-bind:data-token="token.keyName" class="name border px-8 py-4 text-sm text-gray-100">
+    <div class="token-name-inner">
+    ${ token.name }
     {% include "admin_options.html" %}
     {% include "token_audit.html" %}
+    </div>
 </td>
   <td class="symbol border px-8 py-4 text-sm text-gray-100">${ token.symbol }</td>
   <td class="trades border px-4 text-center py-4 text-sm text-gray-100">added ${ token.addedDate }<br/>${ token.tradeCount } trades</td>
   <td class="volume border px-8 py-4 text-sm text-gray-100">${ token.tradeVolume }</td>
 </tr>
+</tbody>
 </table>
 
 <nav aria-label="Navigation">

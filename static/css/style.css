@@ -24,6 +24,14 @@ header {
   font-family: "Patrick Hand", sans-serif;
 }
 
+table{
+	width: 100%;
+}
+
+.token-name-inner{
+		min-height: 40px;
+}
+
 th.name,
 td.name {
   max-width: 200px;
@@ -79,6 +87,17 @@ td.trades {
   margin-top: 15%;
   margin-left: 5%;
   color: white;
+}
+
+.new-listings-inner{
+	position: relative;
+}
+
+.new-listing-warning{
+	width: 408px;
+	position: absolute;
+	right: 0;
+	top: -25px;
 }
 
 .pagination{
