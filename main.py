@@ -176,7 +176,12 @@ def fetch_new():
 
         pair_symbol = token0['symbol'] + '-' + token1['symbol']
         pair_name = token0['name'] + ', ' + token1['name']
-        print("getting pair: ", pair_name)
+        
+        if scam_filter(pair):
+            print("scam detected for {}. Skipping...".format(pair_symbol))
+            continue
+
+        print("creating getting pair: ", pair_name)
 
         pairs.append(Pair(key_name=ascii_printable(pair_symbol),
         id=pair['id'],
@@ -188,6 +193,12 @@ def fetch_new():
         ))
     db.put(pairs)
     return pairs
+
+def scam_filter(listing):
+    tx_count = int(listing['txCount'])
+    if tx_count < 50:
+        return True
+    return False
 
 
 def handle_404(request, response, exception):
