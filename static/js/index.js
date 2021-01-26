@@ -4,7 +4,8 @@ function loadNewListings(app){
             type: "GET",
             cache: false,
             success: function(response) {
-              $.poolside.newListings = response.pairs;
+              $.poolside.newListings.data = response.pairs;
+              $.poolside.setPages($.poolside.newListings);
             }
       });
 }
@@ -15,7 +16,8 @@ function loadTopMovers(app){
             type: "GET",
             cache: false,
             success: function(response) {
-              $.poolside.topMovers = response.tokens;
+              $.poolside.topMovers.data = response.tokens;
+              $.poolside.setPages($.poolside.topMovers);
             }
       });
 }
@@ -55,14 +57,58 @@ $(function(){
   delimiters: ['${', '}'],
   data: {
     isAdmin: $.isAdmin,
-    newListings: [],
-    topMovers: [],
+    newListings: {
+      data: [],
+      page: 1,
+			perPage: 10,
+			pages: [],
+    },
+    topMovers: {
+      data: [],
+      page: 1,
+			perPage: 10,
+			pages: [],
+    },
     searchResults: []
-  }
-});
+  },
+  methods:{
+  		setPages (list) {
+        list.pages = [];
+  			let numberOfPages = Math.ceil(list.data.length / list.perPage);
+  			for (let index = 1; index <= numberOfPages; index++) {
+  				list.pages.push(index);
+  			}
+  		},
+  		paginate (list) {
+  			let page = list.page;
+  			let perPage = list.perPage;
+  			let from = (page * perPage) - perPage;
+  			let to = (page * perPage);
+      	return  list.data.slice(from, to);
+  		}
+  	},
+  	computed: {
+  		displayedNewListings () {
+  			return this.paginate(this.newListings);
+  		},
+      displayedTopMovers () {
+  			return this.paginate(this.topMovers);
+  		}
+  	},
+  	created(){
+      loadNewListings();
+      loadTopMovers();
 
-loadNewListings();
-loadTopMovers();
+  	},
+  	filters: {
+  		trimWords(value){
+  			return value.split(" ").splice(0,20).join(" ") + '...';
+  		}
+  	}
+  })
+
+
+
 
 searchBar();
 

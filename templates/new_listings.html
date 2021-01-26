@@ -10,7 +10,7 @@
 
 </tr>
 
-<tr v-for="token in newListings">
+<tr v-for="token in displayedNewListings">
   <td v-bind:data-token="token.keyName" class="name border px-8 py-4 text-sm text-gray-100">${ token.name }
     {% include "admin_options.html" %}
     {% include "token_audit.html" %}
@@ -20,3 +20,17 @@
   <td class="volume border px-8 py-4 text-sm text-gray-100">${ token.tradeVolume }</td>
 </tr>
 </table>
+
+<nav aria-label="Navigation">
+   <ul class="pagination">
+     <li class="page-item">
+       <button type="button" class="page-link" v-if="newListings.page != 1" @click="newListings.page--"> Prev </button>
+     </li>
+     <li class="page-item">
+       <button type="button" v-bind:class="{ active: pageNumber == newListings.page }" class="page-link page-number" v-for="pageNumber in newListings.pages.slice(0, newListings.page+5)" @click="newListings.page = pageNumber"> ${ pageNumber } </button>
+     </li>
+     <li class="page-item">
+       <button type="button" @click="newListings.page++" v-if="newListings.page < newListings.pages.length" class="page-link"> Next </button>
+     </li>
+   </ul>
+ </nav>
