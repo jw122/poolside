@@ -2,6 +2,7 @@ from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
 import model
+import logging
 
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/info'
 
@@ -13,12 +14,15 @@ headers = {
 }
 
 def get_metadata(symbol):
+  if not api_key:
+      logging.error('CMC_API_KEY setting is missing. Cannot fetch metadata.')
+      return
   session = Session()
   session.headers.update(headers)
   parameters = {
     'symbol': symbol
   }
-  
+
   try:
     print("fetching info for " + symbol)
     response = session.get(url, params=parameters)

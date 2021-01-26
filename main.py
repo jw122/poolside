@@ -1,7 +1,7 @@
 import logging
 import webapp2
 from google.appengine.ext.webapp import template
-from model import Token, Pair, ascii_printable
+from model import Token, Pair, Aavegotchi, ascii_printable
 import graph
 import token_metadata
 import search
@@ -51,6 +51,11 @@ class UpdateData(webapp2.RequestHandler):
         tokens = uniswap_tokens + new_listings
         self.response.out.write('Saved %s tokens' % len(tokens))
 
+class UpdateNFTData(webapp2.RequestHandler):
+    def get(self):
+        # top movers
+        fetch_aavegotchis()
+
 class NewListingsAPI(webapp2.RequestHandler):
     def get(self):
         NEW_LISTING_MAX_DAYS = 5
@@ -84,7 +89,6 @@ class TokenAPI(webapp2.RequestHandler):
 class SearchAPI(webapp2.RequestHandler):
     def get(self):
         documents = search.query_index('tokens', self.request.get('keyword'))
-        logging.info(documents)
         if documents:
             tokens = [t.to_dict() for t in Token.get_by_key_name([document.doc_id for document in documents]) if t]
             tokens.extend([t.to_dict() for t in Pair.get_by_key_name([document.doc_id for document in documents]) if t])
@@ -142,16 +146,15 @@ def fetch_uniswap():
         # TODO: only get metadata if not already in DB
         metadata = token_metadata.get_metadata(symbol)
         # rate limit
-        time.sleep(2)
-        
-        if 'data' in metadata:
+
+        if metadata and 'data' in metadata:
             print("processing data for ", symbol)
             info = metadata['data'][symbol.upper()]
             print("got info from CMC", info)
 
             new_token.website = info['urls']['website'][0]
             new_token.logo = info['logo']
-            
+
             new_token.description = info['description']
             if len(info['urls']['technical_doc']) > 0:
                 new_token.whitepaper = info['urls']['technical_doc'][0]
@@ -160,7 +163,7 @@ def fetch_uniswap():
             if len(info['urls']['explorer']) > 0:
                 new_token.explorer_url = info['urls']['explorer'][0]
             new_token.created = datetime.datetime.strptime(info['date_added'], "%Y-%m-%dT%H:%M:%S.%fZ")
-            
+            time.sleep(2)
 
         tokens.append(new_token)
     db.put(tokens)
@@ -186,8 +189,25 @@ def fetch_new():
         tradeCount=int(pair['txCount']),
         created=datetime.datetime.fromtimestamp(float(pair['createdAtTimestamp']))
         ))
-    db.put(pairs)
+    if pairs:
+        db.put(pairs)
     return pairs
+
+def fetch_aavegotchis():
+    subgraph_response = graph.aavegotchi_core_kovan()
+    aavegotchis = []
+    for aavegotchi in subgraph_response['data']['aavegotchis']:
+        aavegotchis.append(Aavegotchi(
+            key_name=aavegotchi['id'],
+            id=aavegotchi['id'],
+            name=aavegotchi['name'],
+            kinship=aavegotchi['kinship'],
+            rarityScore=aavegotchi['rarityScore'],
+        ))
+    if aavegotchis:
+        db.put(aavegotchis)
+    return aavegotchis
+
 
 
 def handle_404(request, response, exception):
@@ -200,6 +220,7 @@ application = webapp2.WSGIApplication([
     webapp2.Route('/', Index),
     webapp2.Route('/admin', Index),
     webapp2.Route('/update-data', UpdateData),
+    webapp2.Route('/update-nft-data', UpdateNFTData),
     webapp2.Route('/api/new-listings', NewListingsAPI),
     webapp2.Route('/api/top-movers', TopMoversAPI),
     webapp2.Route(r'/api/token/<token_id>', handler=TokenAPI, name='token_id'),
