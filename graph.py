@@ -50,7 +50,7 @@ def uniswap_new_tokens():
   headers = {}
   query = """
   {
-      pairs(first:50, orderBy:createdAtTimestamp, orderDirection:desc) {
+      pairs(first:300, orderBy:createdAtTimestamp, orderDirection:desc) {
         token0 {
           id
           symbol
