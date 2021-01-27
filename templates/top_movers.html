@@ -3,8 +3,10 @@
   <tr>
     <th class="name bg-blue-900 text-white border text-left px-8 py-4 text-sm">Name</th>
     <th class="symbol bg-blue-900 text-white border text-left px-8 py-4 text-sm">Symbol</th>
-    <th class="volume bg-blue-900 text-white border text-left px-8 py-4 text-sm">Volume</th>
+    <th class="volume bg-blue-900 text-white border text-left px-8 py-4 text-sm">Volume (all time)</th>
+    <th class="volume bg-blue-900 text-white border text-left px-8 py-4 text-sm">Volume (24h)</th>
     <th class="price bg-blue-900 text-white border text-left px-8 py-4 text-sm">Price</th>
+    <th class="price bg-blue-900 text-white border text-left px-8 py-4 text-sm">Price change</th>
   </tr>
   </thead>
   <tbody>
@@ -19,21 +21,26 @@
     </td>
     <td class="symbol border px-8 py-4 text-sm text-gray-100">${ token.symbol } </td>
     <td class="volume border px-8 py-4 text-sm text-gray-100">${ token.tradeVolume }</td>
+    <td class="price border px-8 py-4 text-sm text-gray-100">${ token.volume_24h }</td>
     <td class="price border px-8 py-4 text-sm text-gray-100">${ token.price }</td>
+    <td class="price border px-8 py-4 text-sm text-gray-100">${ token.price_change_24h }</td>
   </tr>
   </tbody>
 </table>
 
 <nav aria-label="Navigation">
-   <ul class="pagination">
-     <li class="page-item">
-       <button type="button" class="page-link" v-if="topMovers.page != 1" @click="topMovers.page--"> Prev </button>
-     </li>
-     <li class="page-item">
-       <button type="button"  v-bind:class="{ active: pageNumber == topMovers.page }" class="page-link page-number"  v-for="pageNumber in topMovers.pages.slice(0, topMovers.page+5)" @click="topMovers.page = pageNumber"> ${ pageNumber } </button>
-     </li>
-     <li class="page-item">
-       <button type="button" @click="topMovers.page++" v-if="topMovers.page < topMovers.pages.length" class="page-link"> Next </button>
-     </li>
-   </ul>
- </nav>
+  <ul class="pagination">
+    <li class="page-item">
+      <button type="button" class="page-link" v-if="topMovers.page != 1" @click="topMovers.page--"> Prev </button>
+    </li>
+    <li class="page-item">
+      <button type="button" v-bind:class="{ active: pageNumber == topMovers.page }" class="page-link page-number"
+        v-for="pageNumber in topMovers.pages.slice(0, topMovers.page+5)" @click="topMovers.page = pageNumber"> ${
+        pageNumber } </button>
+    </li>
+    <li class="page-item">
+      <button type="button" @click="topMovers.page++" v-if="topMovers.page < topMovers.pages.length" class="page-link">
+        Next </button>
+    </li>
+  </ul>
+</nav>

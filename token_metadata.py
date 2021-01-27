@@ -4,7 +4,8 @@ import json
 import model
 import logging
 
-url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/info'
+metadata_url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/info'
+price_quotes_url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
 
 api_key = model.get_setting('CMC_API_KEY')
 
@@ -25,10 +26,13 @@ def get_metadata(symbol):
 
   try:
     print("fetching info for " + symbol)
-    response = session.get(url, params=parameters)
-    data = json.loads(response.text)
-    if data['status']['error_message']:
-      print("ERROR FETCHING FROM CMC: ", data['status']['error_message'])
-    return data
+    metadata = session.get(metadata_url, params=parameters)
+    price_info = session.get(price_quotes_url, params=parameters)
+    
+    metadata_json = json.loads(metadata.text)
+    price_json = json.loads(price_info.text)
+    if metadata_json['status']['error_message']:
+      print("ERROR FETCHING FROM CMC: ", metadata_json['status']['error_message'])
+    return metadata_json, price_json
   except (ConnectionError, Timeout, TooManyRedirects) as e:
     print(e)

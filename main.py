@@ -153,9 +153,14 @@ def fetch_uniswap():
         )
 
         # TODO: only get metadata if not already in DB
-        metadata = token_metadata.get_metadata(symbol)
-        # rate limit
 
+        metadata, price_info = token_metadata.get_metadata(symbol)
+        
+        if price_info and 'data' in price_info:
+            quote = price_info['data'][symbol.upper()]['quote']['USD']
+            new_token.price = quote['price']
+            new_token.price_change_24h = quote['percent_change_24h']
+            new_token.volume_24h = quote['volume_24h']
         if metadata and 'data' in metadata:
             print("processing data for ", symbol)
             info = metadata['data'][symbol.upper()]
@@ -188,7 +193,11 @@ def fetch_new():
 
         pair_symbol = token0['symbol'] + '-' + token1['symbol']
         pair_name = token0['name'] + ', ' + token1['name']
-        print("getting pair: ", pair_name)
+        if scam_filter(pair):
+            print("scam detected! Skipping pair", pair_symbol)
+            continue
+
+        print("creating getting pair: ", pair_name)
 
         pairs.append(Pair(key_name=ascii_printable(pair_symbol),
         id=pair['id'],
@@ -201,6 +210,7 @@ def fetch_new():
     if pairs:
         db.put(pairs)
     return pairs
+
 
 def fetch_aavegotchis():
     subgraph_response = graph.aavegotchi_core_kovan()
@@ -217,6 +227,14 @@ def fetch_aavegotchis():
         db.put(aavegotchis)
         logging.info('saved %s aavegotchis' % len(aavegotchis)) 
     return aavegotchis
+
+
+def scam_filter(listing):
+    tx_count = int(listing['txCount'])
+    volume_usd = float(listing['volumeUSD'])
+    if tx_count < 100 or volume_usd < 1:
+        return True
+    return False
 
 
 
