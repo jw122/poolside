@@ -76,6 +76,15 @@ class TopMoversAPI(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(api_response))
 
+class AavegotchisAPI(webapp2.RequestHandler):
+    def get(self):
+        aavegotchis = Aavegotchi.all().order('-created').fetch(100)
+        api_response = {
+            'aavegotchis': [t.to_dict() for t in aavegotchis]
+        }
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps(api_response))
+
 class TokenAPI(webapp2.RequestHandler):
     def get(self, token_id):
         token = Token.get_by_key_name(token_id)
@@ -206,6 +215,7 @@ def fetch_aavegotchis():
         ))
     if aavegotchis:
         db.put(aavegotchis)
+        logging.info('saved %s aavegotchis' % len(aavegotchis)) 
     return aavegotchis
 
 
@@ -223,6 +233,7 @@ application = webapp2.WSGIApplication([
     webapp2.Route('/update-nft-data', UpdateNFTData),
     webapp2.Route('/api/new-listings', NewListingsAPI),
     webapp2.Route('/api/top-movers', TopMoversAPI),
+    webapp2.Route('/api/aavegotchis', AavegotchisAPI),
     webapp2.Route(r'/api/token/<token_id>', handler=TokenAPI, name='token_id'),
     webapp2.Route('/api/search', SearchAPI),
     webapp2.Route('/admin/admin-action', AdminAction),

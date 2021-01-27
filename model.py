@@ -89,13 +89,14 @@ class Pair(db.Expando, TokenModel):
         return self.created.strftime('%b %d')
 
 
-class Aavegotchi(db.Expando):
+class Aavegotchi(db.Expando, Model):
     # key_name is id
     id = db.StringProperty()
     name = db.StringProperty(required=False)
     kingship = db.StringProperty(required=False)
     rarityScore = db.StringProperty(required=False)
-
+    created = db.DateTimeProperty(required=False)
+    modified = db.DateTimeProperty(auto_now=True)
 
 class Setting(db.Expando):
     # key_name is id
