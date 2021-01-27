@@ -1,0 +1,7 @@
+<carousel :per-page="6" :navigation-enabled="true">
+  <slide  v-for="aavegotchi in aavegotchis" :key="aavegotchi.renderKey">
+    <svg v-if="aavegotchi.svg" v-html="aavegotchi.svg" class="aavegotchi-svg" />
+    <div class="text-white text-center aavegotchi-name mt-2">${ aavegotchi.name }</div>
+
+  </slide>
+</carousel>

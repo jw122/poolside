@@ -1,0 +1,34 @@
+<div id="signup-container" class="lg:w-full justify-center text-center items-end ml-0 mb-5 mt-3 hidden lg:flex">
+
+  <div id="signup-first-step"  style="display: none;">
+    <h2 class="patrick-hand text-white">Join the Pool Party</h2>
+    <div style="padding: 10px 0 30px; display: flex;flex-direction: row; justify-content: center;">
+
+          <div class="form-control" style="text-align: center;">
+            <input id="mailing-list-email" style="min-width: 300px;" type="email" placeholder="Your email address">
+          </div>
+  </div>
+    <button class="bg-blue-800 button button-primary email-signup text-white rounded px-5 py-3">Sign Up</button>
+  </div>
+  <div id="signup-second-step" class="flex w-full justify-center text-center">
+
+
+    <div class="web3-signup-inner flex flex-column w-1/2">
+      <div class="shadow py-4 flex xl:w-1/2 lg:w-1/2 md:w-1/2 sm:w-full pt-10 justify-center ml-10 text-sm">
+        <h3 class="text-white" style="margin-bottom: 20px;">Sign in with your web wallet to personalize featured tokens based on your DeFi activity.</h3>
+      ></div>
+
+      <div class="shadow py-4 flex xl:w-1/2 lg:w-1/2 md:w-1/2 sm:w-full">
+          <button class="web3-sign-in-btn bg-blue-800 px-5 py-2 hover:bg-blue-700 rounded text-white" id="btn-connect">Web3 Sign In</button>
+      </div>
+    </div>
+
+
+  </div>
+  <div id="signup-third-step" class="flex w-full justify-center text-center text-white hidden">
+    Signed in with account <span id="accounts"></span> &nbsp;
+    <button class="web3-sign-out-btn bg-blue-800 px-2 py-1 hover:bg-blue-700 rounded text-white" id="btn-disconnect">
+      Sign Out
+    </button>
+  </div>
+</div>

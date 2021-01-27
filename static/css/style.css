@@ -24,6 +24,14 @@ header {
   font-family: "Patrick Hand", sans-serif;
 }
 
+table{
+	width: 100%;
+}
+
+.token-name-inner{
+		min-height: 40px;
+}
+
 th.name,
 td.name {
   max-width: 200px;
@@ -81,6 +89,17 @@ td.trades {
   color: white;
 }
 
+.new-listings-inner{
+	position: relative;
+}
+
+.new-listing-warning{
+	width: 408px;
+	position: absolute;
+	right: 0;
+	top: -25px;
+}
+
 .pagination{
 	padding: 10px;
 }
@@ -103,6 +122,18 @@ button.page-link {
 .page-number.active{
 	font-weight: bold;
 }
+
+.web3-signup-inner{
+	width: 478px;
+	margin: 0 auto;
+}
+
+.web3-sign-in-btn{
+	height: 40px;
+	margin-top: 36px;
+	margin-left: 15px;
+}
+
 @media (max-width:1100px) {
 
 	#top-movers{

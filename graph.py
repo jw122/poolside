@@ -3,11 +3,11 @@ import requests
 
 GRAPH_REQUEST_TIMEOUT = 15
 
-def one_inch_tokens():
+def one_inch_tokens(count=50):
     headers = {}
     query = """
     {
-      tokens(first: 50) {
+      tokens(first: %(count)s) {
         id
         symbol,
         name,
@@ -16,19 +16,19 @@ def one_inch_tokens():
         tradeCount,
       }
     }
-    """
+    """ % { 'count': count }
     request = requests.post('https://api.thegraph.com/subgraphs/name/1inch-exchange/one-inch-v2',
         json={'query': query}, headers=headers, timeout=GRAPH_REQUEST_TIMEOUT)
     if request.status_code == 200:
         return request.json()
 
-def uniswap_tokens():
+def uniswap_tokens(count=20):
   print("getting uniswap tokens")
   headers = {}
   query = """
   {
 
-    tokens(first: 20, orderBy:tradeVolumeUSD, orderDirection:desc) {
+    tokens(first: %(count)s, orderBy:tradeVolumeUSD, orderDirection:desc) {
       id
       symbol
       name
@@ -37,7 +37,7 @@ def uniswap_tokens():
       txCount
     }
   }
-  """
+  """ % { 'count': count }
 
   request = requests.post('https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',
       json={'query': query}, headers=headers, timeout=GRAPH_REQUEST_TIMEOUT)
@@ -46,11 +46,11 @@ def uniswap_tokens():
 
 
 
-def uniswap_new_tokens():
+def uniswap_new_tokens(count=50):
   headers = {}
   query = """
   {
-      pairs(first:300, orderBy:createdAtTimestamp, orderDirection:desc) {
+      pairs(first:%(count)s, orderBy:createdAtTimestamp, orderDirection:desc) {
         token0 {
           id
           symbol
@@ -81,9 +81,28 @@ def uniswap_new_tokens():
         createdAtTimestamp
       }
   }
-  """
+  """ % { 'count': count }
 
   request = requests.post('https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',
+      json={'query': query}, headers=headers, timeout=GRAPH_REQUEST_TIMEOUT)
+  if request.status_code == 200:
+      return request.json()
+
+
+def aavegotchi_core_kovan(count=50):
+  headers = {}
+  query = """
+  {
+  aavegotchis(first: %(count)s) {
+    id
+    kinship
+    name
+    rarityScore
+  }
+  }
+  """ % { 'count': count }
+
+  request = requests.post('https://api.thegraph.com/subgraphs/name/aavegotchi/aavegotchi-core-kovan',
       json={'query': query}, headers=headers, timeout=GRAPH_REQUEST_TIMEOUT)
   if request.status_code == 200:
       return request.json()

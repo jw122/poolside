@@ -1,23 +1,41 @@
-function loadNewListings(app){
+function loadNewListings(){
   $.ajax({
             url: "/api/new-listings",
             type: "GET",
             cache: false,
             success: function(response) {
-              $.poolside.newListings.data = response.pairs;
-              $.poolside.setPages($.poolside.newListings);
+              $.poolside.app.newListings.data = response.pairs;
+              $.poolside.app.setPages($.poolside.app.newListings);
             }
       });
 }
 
-function loadTopMovers(app){
+function loadTopMovers(){
   $.ajax({
             url: "/api/top-movers",
             type: "GET",
             cache: false,
             success: function(response) {
-              $.poolside.topMovers.data = response.tokens;
-              $.poolside.setPages($.poolside.topMovers);
+              $.poolside.app.topMovers.data = response.tokens;
+              $.poolside.app.setPages($.poolside.app.topMovers);
+              loadAavegotchis();
+            }
+      });
+}
+
+function loadAavegotchis(){
+  $.ajax({
+            url: "/api/aavegotchis",
+            type: "GET",
+            cache: false,
+            success: function(response) {
+              console.log(response);
+              $.poolside.app.aavegotchis = response.aavegotchis.map(a => {
+                a.renderKey = a.id;
+                return a;
+              });
+              $.poolside.app.aavegotchis.forEach((e, i) =>
+              $.poolside.fetchAavegotchiSvgs(i));
             }
       });
 }
@@ -29,7 +47,7 @@ function searchBar(){
        value = $(this).val();
 
        if (!value.length){
-          $.poolside.searchResults = [];
+          $.poolside.app.searchResults = [];
           return;
        }
 
@@ -43,7 +61,7 @@ function searchBar(){
                    'keyword' : value
                },
                success: function(response){
-                   $.poolside.searchResults = response.tokens;
+                   $.poolside.app.searchResults = response.tokens;
                }
            });
        }
@@ -52,7 +70,8 @@ function searchBar(){
 
 $(function(){
 
-  $.poolside = new Vue({
+  $.poolside = {};
+  $.poolside.app = new Vue({
   el: '#tokens',
   delimiters: ['${', '}'],
   data: {
@@ -69,7 +88,12 @@ $(function(){
 			perPage: 10,
 			pages: [],
     },
-    searchResults: []
+    searchResults: [],
+    aavegotchis: []
+  },
+  components: {
+    	'carousel': VueCarousel.Carousel,
+      'slide': VueCarousel.Slide
   },
   methods:{
   		setPages (list) {
@@ -98,7 +122,7 @@ $(function(){
   	created(){
       loadNewListings();
       loadTopMovers();
-
+      $('#tokens').removeClass('invisible');
   	},
   	filters: {
   		trimWords(value){

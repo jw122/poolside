@@ -1,4 +1,5 @@
 <table class="shadow-lg bg-gray-700">
+  <thead>
   <tr>
     <th class="name bg-blue-900 text-white border text-left px-8 py-4 text-sm">Name</th>
     <th class="symbol bg-blue-900 text-white border text-left px-8 py-4 text-sm">Symbol</th>
@@ -7,10 +8,16 @@
     <th class="price bg-blue-900 text-white border text-left px-8 py-4 text-sm">Price</th>
     <th class="price bg-blue-900 text-white border text-left px-8 py-4 text-sm">Price change</th>
   </tr>
+  </thead>
+  <tbody>
   <tr v-for="token in displayedTopMovers">
-    <td class="name border px-8 py-4 text-sm text-gray-100"><a :href="'/api/token/' + token.id"><img :src="token.logo"
-          alt="" width="20%"> ${ token.name
+    <td class="name border px-8 py-4 text-sm text-gray-100">
+<div class="token-name-inner">
+      <a :href="'/api/token/' + token.id"><img :src="token.logo"
+          alt="" width="20%">
+          ${ token.name
         }</a>
+      </div>
     </td>
     <td class="symbol border px-8 py-4 text-sm text-gray-100">${ token.symbol } </td>
     <td class="volume border px-8 py-4 text-sm text-gray-100">${ token.tradeVolume }</td>
@@ -18,6 +25,7 @@
     <td class="price border px-8 py-4 text-sm text-gray-100">${ token.price }</td>
     <td class="price border px-8 py-4 text-sm text-gray-100">${ token.price_change_24h }</td>
   </tr>
+  </tbody>
 </table>
 
 <nav aria-label="Navigation">
