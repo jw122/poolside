@@ -140,10 +140,15 @@ def fetch_uniswap():
         )
 
         # TODO: only get metadata if not already in DB
-        metadata = token_metadata.get_metadata(symbol)
+        metadata, price_info = token_metadata.get_metadata(symbol)
+        print("price info obtained: ", price_info)
         # rate limit
         time.sleep(2)
-        
+        if 'data' in price_info:
+            quote = price_info['data'][symbol.upper()]['quote']['USD']
+            new_token.price = quote['price']
+            new_token.price_change_24h = quote['percent_change_24h']
+            new_token.volume_24h = quote['volume_24h']
         if 'data' in metadata:
             print("processing data for ", symbol)
             info = metadata['data'][symbol.upper()]
