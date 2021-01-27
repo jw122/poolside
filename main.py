@@ -1,7 +1,7 @@
 import logging
 import webapp2
 from google.appengine.ext.webapp import template
-from model import Token, Pair, Aavegotchi, ascii_printable
+from model import Token, Pair, Aavegotchi, ascii_printable, get_setting
 import graph
 import token_metadata
 import search
@@ -60,18 +60,18 @@ class NewListingsAPI(webapp2.RequestHandler):
     def get(self):
         NEW_LISTING_MAX_DAYS = 5
         new_listing_cutoff = datetime.datetime.now() - datetime.timedelta(days=NEW_LISTING_MAX_DAYS)
-        pairs = Pair.all().filter('created > ', new_listing_cutoff).order('-created').fetch(100)
+        pairs = Pair.all().filter('created > ', new_listing_cutoff).order('-created').fetch(500)
         api_response = {
-            'pairs': [p.to_dict() for p in pairs]
+            'pairs': [p.to_dict() for p in filter_new_listings(pairs)]
         }
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(api_response))
 
 class TopMoversAPI(webapp2.RequestHandler):
     def get(self):
-        tokens = Token.all().order('-tradeVolume').fetch(100)
+        tokens = Token.all().order('-tradeVolume').fetch(500)
         api_response = {
-            'tokens': [t.to_dict() for t in tokens]
+            'tokens': [t.to_dict() for t in filter_top_movers(tokens)]
         }
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(api_response))
@@ -138,6 +138,7 @@ def fetch_uniswap():
     print("fetching data from uniswap")
     subgraph_response = graph.uniswap_tokens()
     tokens = []
+    cmc_api_key = get_setting('CMC_API_KEY')
     for token in subgraph_response['data']['tokens']:
         symbol = token['symbol']
         new_token = Token(
@@ -154,8 +155,8 @@ def fetch_uniswap():
 
         # TODO: only get metadata if not already in DB
 
-        metadata, price_info = token_metadata.get_metadata(symbol)
-        
+        metadata, price_info = token_metadata.get_metadata(symbol, cmc_api_key)
+
         if price_info and 'data' in price_info:
             quote = price_info['data'][symbol.upper()]['quote']['USD']
             new_token.price = quote['price']
@@ -225,7 +226,7 @@ def fetch_aavegotchis():
         ))
     if aavegotchis:
         db.put(aavegotchis)
-        logging.info('saved %s aavegotchis' % len(aavegotchis)) 
+        logging.info('saved %s aavegotchis' % len(aavegotchis))
     return aavegotchis
 
 
@@ -235,6 +236,22 @@ def scam_filter(listing):
     if tx_count < 100 or volume_usd < 1:
         return True
     return False
+
+def filter_top_movers(tokens):
+    def tokenFilter(token):
+        if token.symbol in ['WETH', 'USDC', 'USDT', 'DAI', 'WBTC']:
+            # filter out tokens that are always highest in volume
+            return False
+        return True
+    return [token for token in tokens if tokenFilter(token)]
+
+def filter_new_listings(pairs):
+    MINIMUM_TRADE_COUNT = 50
+    def pairFilter(pair):
+        if pair.tradeCount < MINIMUM_TRADE_COUNT:
+            return False
+        return True
+    return [pair for pair in pairs if pairFilter(pair)]
 
 
 
