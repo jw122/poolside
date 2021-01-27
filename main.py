@@ -176,9 +176,8 @@ def fetch_new():
 
         pair_symbol = token0['symbol'] + '-' + token1['symbol']
         pair_name = token0['name'] + ', ' + token1['name']
-        
         if scam_filter(pair):
-            print("scam detected for {}. Skipping...".format(pair_symbol))
+            print("scam detected! Skipping pair", pair_symbol)
             continue
 
         print("creating getting pair: ", pair_name)
@@ -196,7 +195,8 @@ def fetch_new():
 
 def scam_filter(listing):
     tx_count = int(listing['txCount'])
-    if tx_count < 50:
+    volume_usd = float(listing['volumeUSD'])
+    if tx_count < 100 or volume_usd < 1:
         return True
     return False
 
