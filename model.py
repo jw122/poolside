@@ -41,6 +41,8 @@ class Token(db.Expando, TokenModel):
     name = db.StringProperty(required=False)
     description = db.StringProperty(required=False)
     price = db.FloatProperty(required=False)
+    price_change_24h = db.FloatProperty(required=False)
+    volume_24h = db.FloatProperty(required=False)
     tradeCount = db.IntegerProperty(required=False)
     tradeVolume = db.FloatProperty(required=False)
     decimals = db.IntegerProperty(required=False)
