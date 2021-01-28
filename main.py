@@ -3,6 +3,7 @@ import webapp2
 from google.appengine.ext.webapp import template
 from model import Token, Pair, Aavegotchi, ascii_printable, get_setting
 import graph
+import one_inch
 import token_metadata
 import search
 from google.appengine.ext import db
@@ -96,6 +97,15 @@ class TokenAPI(webapp2.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'templates/token_details.html')
         self.response.out.write(template.render(path, {'token': token}))
 
+class OneInchHandler(webapp2.RequestHandler):
+    def get(self, token1_id, token2_id):
+        print("getting 1inch quote for pair {}-{}".format(token1_id, token2_id))
+        api_response = one_inch.one_inch_quotes(token1_id, token2_id)
+        print("response from 1inch: ", api_response)
+
+        # TODO: update to render template with response
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps(api_response))
 
 class SearchAPI(webapp2.RequestHandler):
     def get(self):
@@ -271,6 +281,7 @@ application = webapp2.WSGIApplication([
     webapp2.Route('/api/top-movers', TopMoversAPI),
     webapp2.Route('/api/aavegotchis', AavegotchisAPI),
     webapp2.Route(r'/api/token/<token_id>', handler=TokenAPI, name='token_id'),
+    webapp2.Route(r'/api/one-inch/<token1_id>-<token2_id>', handler=OneInchHandler, name='token_ids'),
     webapp2.Route('/api/search', SearchAPI),
     webapp2.Route('/admin/admin-action', AdminAction),
 ], debug=True)
