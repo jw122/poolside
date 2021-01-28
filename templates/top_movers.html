@@ -1,8 +1,9 @@
 <table class="shadow-lg bg-gray-700">
   <thead>
   <tr>
-    <th class="name bg-blue-900 text-white border text-left px-8 py-4 text-sm">Name</th>
+    <th class="name bg-blue-900 text-white border text-left px-8 py-4 text-sm">Token</th>
     <th class="description bg-blue-900 text-white border text-left px-8 py-4 text-sm">Info</th>
+    <th class="category bg-blue-900 text-white border text-left px-8 py-4 text-sm">Category</th>
     <th class="volume bg-blue-900 text-white border text-left px-8 py-4 text-sm">Volume</th>
     <th class="price bg-blue-900 text-white border text-left px-8 py-4 text-sm">Price</th>
   </tr>
@@ -11,9 +12,19 @@
   <tr v-for="token in displayedTopMovers">
     <td class="name border px-8 py-4 text-sm text-gray-100">
 <div class="token-name-inner">
-      <a class="font-bold" :href="'/api/token/' + token.id"><img class="token-logo" :src="token.logo"
+      <a class="token-name font-bold text-xl" :href="'/api/token/' + token.id"><img class="token-logo" :src="token.logo"
           alt="" width="20%">
-          ${ token.name } (${ token.symbol })</a>
+          ${ token.name }</a>
+          <div v-if="token.symbol" class="token-symbol">
+            <button class="bg-gray-600 hover:bg-gray-500 rounded text-white px-2 mt-3 mr-2">
+              <p class="font-semibold text-lg">
+                <a target="_blank"  v-bind:href="'https://twitter.com/search?q=$' + token.symbol">
+                  $${ token.symbol}
+                </a>
+                </p>
+            </button>
+            </div>
+
       </div>
     </td>
     <td class="description border px-8 py-4 text-sm text-gray-100">
@@ -37,7 +48,14 @@
       <div class="token-description-detailed hidden">
         <div class="token-description-details">${ token.description }</div>
       </div>
-       </td>
+    </td>
+    <td class="category border px-8 py-4 text-sm text-gray-100">
+      <div class="token-tag m-3" v-for="tag in token.tags">
+        <span :class="tag[1]  + ' token-tag-badge text-xs font-semibold inline-block py-1 px-2 uppercase rounded uppercase last:mr-0 mr-1'">
+        ${ tag[0] }
+</span>
+      </div>
+    </td>
     <td class="volume border px-8 py-4 text-sm text-gray-100 text-center">
       <div v-if="token.volume_24h">Daily: ${ token.volume_24h }</div>
         <div v-if="token.tradeVolume">Total: ${ token.tradeVolume }</div>
