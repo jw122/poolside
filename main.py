@@ -45,8 +45,10 @@ class UpdateData(webapp2.RequestHandler):
                 else:
                     logging.warning('token document already created: %s' % token.key().name())
 
+        MAX_DOCUMENTS = 200
         if documents:
-            search.add_documents_to_index('tokens', documents)
+            for x in xrange(0,len(documents),MAX_DOCUMENTS):
+                search.add_documents_to_index('tokens', documents[x:x+MAX_DOCUMENTS])
 
         tokens = uniswap_tokens + new_listings
         self.response.out.write('Saved %s tokens' % len(tokens))
@@ -158,25 +160,32 @@ def fetch_uniswap():
         metadata, price_info = token_metadata.get_metadata(symbol, cmc_api_key)
 
         if price_info and 'data' in price_info:
-            quote = price_info['data'][symbol.upper()]['quote']['USD']
-            new_token.price = quote['price']
-            new_token.price_change_24h = quote['percent_change_24h']
-            new_token.volume_24h = quote['volume_24h']
+            if symbol.upper() in price_info['data']:
+                quote = price_info['data'][symbol.upper()]['quote']['USD']
+                if quote['price']:
+                    new_token.price = quote['price']
+                if quote['percent_change_24h']:
+                    new_token.price_change_24h = quote['percent_change_24h']
+                if quote['volume_24h']:
+                    new_token.volume_24h = quote['volume_24h']
         if metadata and 'data' in metadata:
             print("processing data for ", symbol)
-            info = metadata['data'][symbol.upper()]
-            print("got info from CMC", info)
+            if symbol.upper() in metadata['data']:
+                info = metadata['data'][symbol.upper()]
+                print("got info from CMC", info)
+                logging.info(info)
 
-            new_token.website = info['urls']['website'][0]
-            new_token.logo = info['logo']
-
-            new_token.description = info['description']
-            if len(info['urls']['technical_doc']) > 0:
-                new_token.whitepaper = info['urls']['technical_doc'][0]
-            if len(info['urls']['twitter']) > 0:
-                new_token.twitter = info['urls']['twitter'][0]
-            if len(info['urls']['explorer']) > 0:
-                new_token.explorer_url = info['urls']['explorer'][0]
+                new_token.logo = info['logo']
+                new_token.tags = info.get('tag-names') or []
+                new_token.description = info['description']
+                if len(info['urls']['website']) > 0:
+                    new_token.website = info['urls']['website'][0]
+                if len(info['urls']['technical_doc']) > 0:
+                    new_token.whitepaper = info['urls']['technical_doc'][0]
+                if len(info['urls']['twitter']) > 0:
+                    new_token.twitter = info['urls']['twitter'][0]
+                if len(info['urls']['explorer']) > 0:
+                    new_token.explorer_url = info['urls']['explorer'][0]
             new_token.created = datetime.datetime.strptime(info['date_added'], "%Y-%m-%dT%H:%M:%S.%fZ")
             time.sleep(2)
 
