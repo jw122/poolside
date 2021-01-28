@@ -48,6 +48,9 @@ td.description .token-description-detailed, td.description .token-description-su
   cursor: pointer;
 }
 
+.token-info p{
+  margin-top: 3px;
+}
 
 th.volume,
 td.volume {
