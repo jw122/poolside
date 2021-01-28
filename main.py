@@ -64,7 +64,7 @@ class NewListingsAPI(webapp2.RequestHandler):
         new_listing_cutoff = datetime.datetime.now() - datetime.timedelta(days=NEW_LISTING_MAX_DAYS)
         pairs = Pair.all().filter('created > ', new_listing_cutoff).order('-created').fetch(500)
         api_response = {
-            'pairs': [p.to_dict() for p in filter_new_listings(pairs)]
+            'pairs': [p.to_dict() for p in pairs]
         }
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(api_response))
@@ -253,14 +253,6 @@ def filter_top_movers(tokens):
             return False
         return True
     return [token for token in tokens if tokenFilter(token)]
-
-def filter_new_listings(pairs):
-    MINIMUM_TRADE_COUNT = 50
-    def pairFilter(pair):
-        if pair.tradeCount < MINIMUM_TRADE_COUNT:
-            return False
-        return True
-    return [pair for pair in pairs if pairFilter(pair)]
 
 
 
