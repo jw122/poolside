@@ -38,16 +38,29 @@ td.name {
   word-wrap: break-word;
 }
 
-th.symbol,
-td.symbol {
-  max-width: 140px;
+th.description,
+td.description {
+  max-width: 250px;
   word-wrap: break-word;
+}
+
+td.description .token-description-detailed, td.description .token-description-summary{
+  cursor: pointer;
+}
+
+.token-info p{
+  margin-top: 3px;
 }
 
 th.volume,
 td.volume {
-  max-width: 140px;
+  max-width: 120px;
   word-wrap: break-word;
+}
+
+td.volume{
+  font-size: 12px;
+  padding: 0px 10px;
 }
 
 th.price,
@@ -56,10 +69,25 @@ td.price {
   word-wrap: break-word;
 }
 
+td.price{
+  font-size: 12px;
+  padding: 0 5px;
+  text-align: center;
+}
+
 th.trades,
 td.trades {
   max-width: 140px;
   word-wrap: break-word;
+}
+
+img.token-logo{
+  float: left;
+  margin-right: 5px;
+  margin-bottom: -4px;
+  margin-top: 1px;
+  width: 20%;
+
 }
 
 .token-audit{

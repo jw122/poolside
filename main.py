@@ -1,7 +1,7 @@
 import logging
 import webapp2
 from google.appengine.ext.webapp import template
-from model import Token, Pair, Aavegotchi, ascii_printable
+from model import Token, Pair, Aavegotchi, ascii_printable, get_setting
 import graph
 import token_metadata
 import search
@@ -45,8 +45,10 @@ class UpdateData(webapp2.RequestHandler):
                 else:
                     logging.warning('token document already created: %s' % token.key().name())
 
+        MAX_DOCUMENTS = 200
         if documents:
-            search.add_documents_to_index('tokens', documents)
+            for x in xrange(0,len(documents),MAX_DOCUMENTS):
+                search.add_documents_to_index('tokens', documents[x:x+MAX_DOCUMENTS])
 
         tokens = uniswap_tokens + new_listings
         self.response.out.write('Saved %s tokens' % len(tokens))
@@ -60,7 +62,7 @@ class NewListingsAPI(webapp2.RequestHandler):
     def get(self):
         NEW_LISTING_MAX_DAYS = 5
         new_listing_cutoff = datetime.datetime.now() - datetime.timedelta(days=NEW_LISTING_MAX_DAYS)
-        pairs = Pair.all().filter('created > ', new_listing_cutoff).order('-created').fetch(100)
+        pairs = Pair.all().filter('created > ', new_listing_cutoff).order('-created').fetch(500)
         api_response = {
             'pairs': [p.to_dict() for p in pairs]
         }
@@ -69,9 +71,9 @@ class NewListingsAPI(webapp2.RequestHandler):
 
 class TopMoversAPI(webapp2.RequestHandler):
     def get(self):
-        tokens = Token.all().order('-tradeVolume').fetch(100)
+        tokens = Token.all().order('-tradeVolume').fetch(500)
         api_response = {
-            'tokens': [t.to_dict() for t in tokens]
+            'tokens': [t.to_dict() for t in filter_top_movers(tokens)]
         }
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(api_response))
@@ -138,6 +140,7 @@ def fetch_uniswap():
     print("fetching data from uniswap")
     subgraph_response = graph.uniswap_tokens()
     tokens = []
+    cmc_api_key = get_setting('CMC_API_KEY')
     for token in subgraph_response['data']['tokens']:
         symbol = token['symbol']
         new_token = Token(
@@ -154,28 +157,35 @@ def fetch_uniswap():
 
         # TODO: only get metadata if not already in DB
 
-        metadata, price_info = token_metadata.get_metadata(symbol)
-        
+        metadata, price_info = token_metadata.get_metadata(symbol, cmc_api_key)
+
         if price_info and 'data' in price_info:
-            quote = price_info['data'][symbol.upper()]['quote']['USD']
-            new_token.price = quote['price']
-            new_token.price_change_24h = quote['percent_change_24h']
-            new_token.volume_24h = quote['volume_24h']
+            if symbol.upper() in price_info['data']:
+                quote = price_info['data'][symbol.upper()]['quote']['USD']
+                if quote['price']:
+                    new_token.price = quote['price']
+                if quote['percent_change_24h']:
+                    new_token.price_change_24h = quote['percent_change_24h']
+                if quote['volume_24h']:
+                    new_token.volume_24h = quote['volume_24h']
         if metadata and 'data' in metadata:
             print("processing data for ", symbol)
-            info = metadata['data'][symbol.upper()]
-            print("got info from CMC", info)
+            if symbol.upper() in metadata['data']:
+                info = metadata['data'][symbol.upper()]
+                print("got info from CMC", info)
+                logging.info(info)
 
-            new_token.website = info['urls']['website'][0]
-            new_token.logo = info['logo']
-
-            new_token.description = info['description']
-            if len(info['urls']['technical_doc']) > 0:
-                new_token.whitepaper = info['urls']['technical_doc'][0]
-            if len(info['urls']['twitter']) > 0:
-                new_token.twitter = info['urls']['twitter'][0]
-            if len(info['urls']['explorer']) > 0:
-                new_token.explorer_url = info['urls']['explorer'][0]
+                new_token.logo = info['logo']
+                new_token.tags = info.get('tag-names') or []
+                new_token.description = info['description']
+                if len(info['urls']['website']) > 0:
+                    new_token.website = info['urls']['website'][0]
+                if len(info['urls']['technical_doc']) > 0:
+                    new_token.whitepaper = info['urls']['technical_doc'][0]
+                if len(info['urls']['twitter']) > 0:
+                    new_token.twitter = info['urls']['twitter'][0]
+                if len(info['urls']['explorer']) > 0:
+                    new_token.explorer_url = info['urls']['explorer'][0]
             new_token.created = datetime.datetime.strptime(info['date_added'], "%Y-%m-%dT%H:%M:%S.%fZ")
             time.sleep(2)
 
@@ -225,7 +235,7 @@ def fetch_aavegotchis():
         ))
     if aavegotchis:
         db.put(aavegotchis)
-        logging.info('saved %s aavegotchis' % len(aavegotchis)) 
+        logging.info('saved %s aavegotchis' % len(aavegotchis))
     return aavegotchis
 
 
@@ -235,6 +245,14 @@ def scam_filter(listing):
     if tx_count < 100 or volume_usd < 1:
         return True
     return False
+
+def filter_top_movers(tokens):
+    def tokenFilter(token):
+        if token.symbol in ['WETH', 'USDC', 'USDT', 'DAI', 'WBTC']:
+            # filter out tokens that are always highest in volume
+            return False
+        return True
+    return [token for token in tokens if tokenFilter(token)]
 
 
 

@@ -3,7 +3,7 @@ import requests
 
 GRAPH_REQUEST_TIMEOUT = 15
 
-def one_inch_tokens(count=50):
+def one_inch_tokens(count=100):
     headers = {}
     query = """
     {
@@ -22,7 +22,7 @@ def one_inch_tokens(count=50):
     if request.status_code == 200:
         return request.json()
 
-def uniswap_tokens(count=20):
+def uniswap_tokens(count=200):
   print("getting uniswap tokens")
   headers = {}
   query = """
@@ -46,7 +46,7 @@ def uniswap_tokens(count=20):
 
 
 
-def uniswap_new_tokens(count=50):
+def uniswap_new_tokens(count=100):
   headers = {}
   query = """
   {

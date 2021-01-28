@@ -152,6 +152,19 @@ $('#tokens').click(function(e){
     });
 
   }
+
+  if (parent.hasClass('token-description-overview')){
+      console.log('clicked');
+      parent.addClass('hidden').parent().find('.token-description-detailed').removeClass('hidden');
+  }
+  if (parent.hasClass('token-description-detailed') || $(e.target).hasClass('token-description-detailed'))  {
+    var td = $(e.target).parents('td:first');
+    td.find('.token-description-detailed').addClass('hidden');
+    td.find('.token-description-overview').removeClass('hidden');
+  }
+
 });
+
+
 
 });

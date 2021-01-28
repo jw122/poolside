@@ -2,28 +2,51 @@
   <thead>
   <tr>
     <th class="name bg-blue-900 text-white border text-left px-8 py-4 text-sm">Name</th>
-    <th class="symbol bg-blue-900 text-white border text-left px-8 py-4 text-sm">Symbol</th>
-    <th class="volume bg-blue-900 text-white border text-left px-8 py-4 text-sm">Volume (all time)</th>
-    <th class="volume bg-blue-900 text-white border text-left px-8 py-4 text-sm">Volume (24h)</th>
+    <th class="description bg-blue-900 text-white border text-left px-8 py-4 text-sm">Info</th>
+    <th class="volume bg-blue-900 text-white border text-left px-8 py-4 text-sm">Volume</th>
     <th class="price bg-blue-900 text-white border text-left px-8 py-4 text-sm">Price</th>
-    <th class="price bg-blue-900 text-white border text-left px-8 py-4 text-sm">Price change</th>
   </tr>
   </thead>
   <tbody>
   <tr v-for="token in displayedTopMovers">
     <td class="name border px-8 py-4 text-sm text-gray-100">
 <div class="token-name-inner">
-      <a :href="'/api/token/' + token.id"><img :src="token.logo"
+      <a class="font-bold" :href="'/api/token/' + token.id"><img class="token-logo" :src="token.logo"
           alt="" width="20%">
-          ${ token.name
-        }</a>
+          ${ token.name } (${ token.symbol })</a>
       </div>
     </td>
-    <td class="symbol border px-8 py-4 text-sm text-gray-100">${ token.symbol } </td>
-    <td class="volume border px-8 py-4 text-sm text-gray-100">${ token.tradeVolume }</td>
-    <td class="price border px-8 py-4 text-sm text-gray-100">${ token.volume_24h }</td>
-    <td class="price border px-8 py-4 text-sm text-gray-100">${ token.price }</td>
-    <td class="price border px-8 py-4 text-sm text-gray-100">${ token.price_change_24h }</td>
+    <td class="description border px-8 py-4 text-sm text-gray-100">
+      <div class="token-description-overview">
+        <div class="token-description-summary hidden font-bold" v-if="token.description">${ token.truncatedDescription }</div>
+        <div class="token-info">
+           <p v-if="token.whitepaper">
+             <a target="_blank" :href="token.whitepaper"><i class="fas fa-scroll"></i> Whitepaper</a>
+          </p>
+          <p v-if="token.website">
+            <a target="_blank" :href="token.website"><i class="fas fa-link"></i> Website</a>
+          </p>
+          <p v-if="token.explorer_url">
+            <a target="_blank" :href="token.explorer_url"><i class="fas fa-search"></i> Explorer</a>
+          </p>
+          <p v-if="token.twitter">
+            <a target="_blank" :href="token.twitter"><i class="fab fa-twitter"></i> Twitter</a>
+          </p>
+        </div>
+      </div>
+      <div class="token-description-detailed hidden">
+        <div class="token-description-details">${ token.description }</div>
+      </div>
+       </td>
+    <td class="volume border px-8 py-4 text-sm text-gray-100 text-center">
+      <div v-if="token.volume_24h">Daily: ${ token.volume_24h }</div>
+        <div v-if="token.tradeVolume">Total: ${ token.tradeVolume }</div>
+    </td>
+    <td class="price border px-8 py-4 text-sm text-gray-100">
+      <div v-if="token.price">$${ token.price }
+        <div class="price-change" v-bind:class="token.priceChangeClass" v-if="token.price_change_24h">${ token.price_change_24h}%</div>
+      </div>
+    </td>
   </tr>
   </tbody>
 </table>

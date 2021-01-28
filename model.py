@@ -16,23 +16,43 @@ def token_from_pair_symbol(n):
 
 class Model():
     def to_dict(self):
-       entity = dict([(p, unicode(getattr(self, '%s_to_dict' % p, getattr(self, p)))) for p in self.properties()])
-       entity['keyName'] = self.key().name()
-       return entity
+        properties = []
+        for p in self.properties():
+            value = getattr(self, '%s_to_dict' % p, getattr(self, p))
+            value_tuple = (p, unicode(value) if value else None)
+            properties.append(value_tuple)
+        entity = dict(properties)
+        entity['keyName'] = self.key().name()
+        return entity
 
 
 class TokenModel(Model):
 
     @property
     def tradeVolume_to_dict(self):
-        if self.tradeVolume > 1000000:
-            return '%sM' %  math.floor(self.tradeVolume/1000000)
-        if self.tradeVolume > 10000:
-            return '%sk' %  math.floor(self.tradeVolume/1000)
-        elif self.tradeVolume:
-            return '%s' % int(self.tradeVolume)
-        else:
-            return ''
+        return volume_to_dict(self.tradeVolume)
+
+    @property
+    def volume_24h_to_dict(self):
+        return volume_to_dict(self.volume_24h)
+
+    @property
+    def price_to_dict(self):
+        return round(self.price, 2) if self.price else None
+
+    @property
+    def price_change_24h_to_dict(self):
+        return round(self.price_change_24h or 0, 1) if self.price_change_24h else None
+
+def volume_to_dict(volume):
+    if volume > 1000000:
+        return '%sM' %  math.floor(volume/1000000)
+    if volume > 10000:
+        return '%sk' %  math.floor(volume/1000)
+    elif volume:
+        return '%s' % int(volume)
+    else:
+        return ''
 
 class Token(db.Expando, TokenModel):
     # key_name is id
@@ -51,9 +71,31 @@ class Token(db.Expando, TokenModel):
 
     website = db.StringProperty(required=False)
     logo = db.StringProperty(required=False)
+    tags = db.StringListProperty(required=True)
     whitepaper_url = db.StringProperty(required=False)
     twitter = db.StringProperty(required=False)
     explorer_url = db.StringProperty(required=False)
+
+    def to_dict(self):
+        token_dict = super(Token, self).to_dict()
+        MAX_DESCRIPTION_LENGTH = 40;
+
+        description = token_dict.get('description') or ''
+        token_dict['truncatedDescription'] = '%s...' % description[0:MAX_DESCRIPTION_LENGTH] if len(description) > MAX_DESCRIPTION_LENGTH else description
+
+        price_change = self.price_change_24h
+        token_dict['priceChangeClass'] = {
+            'text-green-300': 0 <= price_change < 3,
+            'text-green-400': 3 <= price_change < 6,
+            'text-green-500': 6 <= price_change < 10,
+            'text-green-700': price_change > 10,
+            'text-red-300': 0 >= price_change > -3,
+            'text-red-400': -3 >= price_change > -6,
+            'text-red-500': -6 >= price_change > -10,
+            'text-red-700': price_change < -10,
+            'font-bold': price_change > 10 or price_change < -10
+        }
+        return token_dict
 
 
 
