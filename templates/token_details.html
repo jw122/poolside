@@ -60,8 +60,27 @@
         </p>
         {% endif %}
 
-        <!-- TODO: dropdown -->
-        <button id="one-inch-quote">1inch Quote</button>
+        <div class="token-get-quote">
+            <h3 style="color: white"><i class="fas fa-dollar-sign"></i> Get 1inch Quote</h3>
+            <p>From: {{ token.symbol }} (<span id="from-token-address">{{ token.id }}</span>) </p>
+            <form class="form-inline">
+                <div class="form-group mb-2">
+                    <label for="staticEmail2" class="sr-only">Amount</label>
+                    <input id="quote-amount" type="text" placeholder="Enter Amount">
+                </div>
+                <p>Swap To</p>
+                <select class="form-control form-control-sm" id="to-token-address">
+                    <option style="color: black" value="0x6b175474e89094c44da98b954eedeac495271d0f">DAI</option>
+                    <option style="color: black" value="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2">ETH</option>
+                    <option style="color: black" value="0x2260fac5e5542a773aa44fbcfedf7c193bc2c599">WBTC</option>
+                </select>
+
+            </form>
+            <button id="one-inch-quote">📈 Fetch Quote</button>
+            <p>
+                <a href="https://1inch.exchange/#/{{ token.symbol }}/ETH"> View on 1inch</a>
+            </p>
+        </div>
 
     </div>
 

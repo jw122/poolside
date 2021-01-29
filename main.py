@@ -98,14 +98,15 @@ class TokenAPI(webapp2.RequestHandler):
         self.response.out.write(template.render(path, {'token': token}))
 
 class OneInchHandler(webapp2.RequestHandler):
-    def get(self, token1_id, token2_id):
-        print("getting 1inch quote for pair {}-{}".format(token1_id, token2_id))
-        api_response = one_inch.one_inch_quotes(token1_id, token2_id)
+    def get(self, token1_id, token2_id, amount):
+        print("getting 1inch quote for pair {}-{} of amount {}".format(token1_id, token2_id, amount))
+        api_response = one_inch.one_inch_quotes(token1_id, token2_id, amount)
         print("response from 1inch: ", api_response)
+        to_token_amount = api_response['toTokenAmount']
 
         # TODO: update to render template with response
         self.response.headers['Content-Type'] = 'application/json'
-        self.response.out.write(json.dumps(api_response))
+        self.response.out.write(json.dumps({'from_token': token1_id, 'to_token': token2_id, 'from_token_amount': amount, 'to_token_amount': to_token_amount}))
 
 class SearchAPI(webapp2.RequestHandler):
     def get(self):
@@ -281,7 +282,7 @@ application = webapp2.WSGIApplication([
     webapp2.Route('/api/top-movers', TopMoversAPI),
     webapp2.Route('/api/aavegotchis', AavegotchisAPI),
     webapp2.Route(r'/api/token/<token_id>', handler=TokenAPI, name='token_id'),
-    webapp2.Route(r'/api/one-inch/<token1_id>-<token2_id>', handler=OneInchHandler, name='token_ids'),
+    webapp2.Route(r'/api/one-inch/<token1_id>-<token2_id>-<amount>', handler=OneInchHandler, name='token_ids'),
     webapp2.Route('/api/search', SearchAPI),
     webapp2.Route('/admin/admin-action', AdminAction),
 ], debug=True)
