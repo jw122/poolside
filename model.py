@@ -16,10 +16,14 @@ def token_from_pair_symbol(n):
 
 class Model():
     def to_dict(self):
+        def format_value(p, value):
+            if p in ['created', 'modified']:
+                return unicode(value)
+            return value
         properties = []
         for p in self.properties():
             value = getattr(self, '%s_to_dict' % p, getattr(self, p))
-            value_tuple = (p, unicode(value) if value else None)
+            value_tuple = (p, format_value(p, value))
             properties.append(value_tuple)
         entity = dict(properties)
         entity['keyName'] = self.key().name()
@@ -78,7 +82,8 @@ class Token(db.Expando, TokenModel):
 
     def to_dict(self):
         token_dict = super(Token, self).to_dict()
-        MAX_DESCRIPTION_LENGTH = 40;
+        MAX_DESCRIPTION_LENGTH = 40
+        MAX_TAGS = 3
 
         description = token_dict.get('description') or ''
         token_dict['truncatedDescription'] = '%s...' % description[0:MAX_DESCRIPTION_LENGTH] if len(description) > MAX_DESCRIPTION_LENGTH else description
@@ -95,6 +100,14 @@ class Token(db.Expando, TokenModel):
             'text-red-700': price_change < -10,
             'font-bold': price_change > 10 or price_change < -10
         }
+
+        colors = ['red', 'purple', 'indigo', 'green', 'orange', 'gray', 'teal', 'pink', 'yellow']
+
+        token_dict['tags'] = [(tag,
+            'text-%(color)s-600 bg-%(color)s-200' % { 'color': colors[i] }
+            ) for i, tag in enumerate(token_dict['tags'][:MAX_TAGS])]
+
+
         return token_dict
 
 
@@ -125,6 +138,10 @@ class Pair(db.Expando, TokenModel):
         pair_dict['name'] =  token_from_pair_name(pair_dict['name'])
         pair_dict['pair-symbol'] =  token_from_pair_symbol(pair_dict['symbol'])
         pair_dict['symbol'] = pair_dict['symbol']
+        formattedSymbol = pair_dict['symbol'].split('-')[0]
+        if formattedSymbol in ['WETH', 'USDT', 'USDC', 'DAI']:
+            formattedSymbol = pair_dict['symbol'].split('-')[1]
+        pair_dict['formattedSymbol'] = formattedSymbol
         pair_dict['addedDate'] = self.addedDate
         return pair_dict
 
