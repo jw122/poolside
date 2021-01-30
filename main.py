@@ -105,7 +105,6 @@ class OneInchHandler(webapp2.RequestHandler):
         to_token_amount = api_response['toTokenAmount']
         to_token = api_response['toToken']['symbol']
         from_token = api_response['fromToken']['symbol']
-        # TODO: update to render template with response
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps({'quotes': {'from_token': from_token, 'to_token': to_token, 'from_token_amount': amount, 'to_token_amount': to_token_amount}}))
 class SearchAPI(webapp2.RequestHandler):
