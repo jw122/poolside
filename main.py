@@ -164,61 +164,83 @@ def fetch_uniswap():
         )
 
         tokens.append(new_token)
-    db.put(tokens)
-    populate_metadata(tokens)
     
-    return tokens
+    updated_tokens = populate_metadata(tokens)
+    db.put(updated_tokens)
+    
+    return updated_tokens
 
 def populate_metadata(tokens):
-        cmc_api_key = get_setting('CMC_API_KEY')
-        symbols = [tok.symbol for tok in tokens if tok.symbol.isalnum() and tok.symbol.upper() not in token_metadata.invalid_tokens]
-        
-        symbol_query = ','.join(symbols)
-        print("fetching CMC data for tokens", symbol_query)
+    cmc_api_key = get_setting('CMC_API_KEY')
+    symbols = [tok.symbol for tok in tokens if tok.symbol.isalnum() and tok.symbol.upper() not in token_metadata.invalid_tokens]
+    
+    symbol_query = ','.join(symbols)
+    print("fetching CMC data for tokens", symbol_query)
 
-        metadata, price_info = token_metadata.get_metadata(symbol_query, cmc_api_key)
+    metadata, price_info = token_metadata.get_metadata(symbol_query, cmc_api_key)
+    updated_tokens = []
+    if metadata and 'data' in metadata:
+        data = metadata['data']
+        for token_symbol in data:
+            info = data[token_symbol]
+            if not info['platform']:
+                continue
 
-        if metadata and 'data' in metadata:
-            data = metadata['data']
-            for token_symbol in data:
-                info = data[token_symbol]
-                if not info['platform']:
-                    continue
+            address = info['platform']['token_address']
+            token_to_update = get_token_to_update(tokens, address)
 
-                address = info['platform']['token_address']
-                token_to_update = Token.get_by_key_name(address.lower())
-                if token_to_update:
-                    print("updating token", token_to_update)
-                    # token details
-                    logging.info(info)
-                    print("token info: ", info)
-                    token_to_update.logo = info['logo']
-                    token_to_update.tags = info.get('tag-names') or []
-                    token_to_update.description = info['description']
-                    if len(info['urls']['website']) > 0:
-                        token_to_update.website = info['urls']['website'][0]
-                    if len(info['urls']['technical_doc']) > 0:
-                        token_to_update.whitepaper = info['urls']['technical_doc'][0]
-                    if len(info['urls']['twitter']) > 0:
-                        token_to_update.twitter = info['urls']['twitter'][0]
-                    if len(info['urls']['explorer']) > 0:
-                        token_to_update.explorer_url = info['urls']['explorer'][0]
 
-                    # price info
-                    quote = price_info['data'][token_symbol.upper()]['quote']['USD']
-                    print("quote for token: ", quote)
-                    if quote['price']:
-                        token_to_update.price = quote['price']
-                    if quote['percent_change_24h']:
-                        token_to_update.price_change_24h = quote['percent_change_24h']
-                    if quote['volume_24h']:
-                        token_to_update.volume_24h = quote['volume_24h']
-                    
-                    token_to_update.put()
-                    print("updated details and price for token", token_to_update.symbol)
-                else:
-                    print("no existing token in DB for " + info['platform']['symbol'] + ' (' + address + ')')
+            if token_to_update:
+                print("updating token", token_to_update)
 
+                # token details
+                logging.info(info)
+                print("token info: ", info)
+                token_to_update.logo = info['logo']
+                token_to_update.tags = info.get('tag-names') or []
+                token_to_update.description = info['description']
+
+                # links
+                urls = info['urls']
+                populate_urls(token_to_update, urls)
+
+                # price info
+                price_data = price_info['data']
+                populate_price(token_to_update, token_symbol, price_data)
+                
+                updated_tokens.append(token_to_update)
+                print("updated details and price for token", token_to_update.symbol)
+            else:
+                print("no existing token in DB for " + info['platform']['symbol'] + ' (' + address + ')')
+    return updated_tokens
+
+def get_token_to_update(tokens, address):
+    for token in tokens:
+        print("current token: ", token)
+        if token.id == address:
+            return token
+    return None
+
+def populate_urls(token_to_update, urls):
+    print("urls: ", urls)
+    if len(urls['website']) > 0:
+        token_to_update.website = urls['website'][0]
+    if len(urls['technical_doc']) > 0:
+        token_to_update.whitepaper = urls['technical_doc'][0]
+    if len(urls['twitter']) > 0:
+        token_to_update.twitter = urls['twitter'][0]
+    if len(urls['explorer']) > 0:
+        token_to_update.explorer_url = urls['explorer'][0]
+
+def populate_price(token_to_update, token_symbol, price_data):
+    print("incoming quote: ", price_data)
+    quote = price_data[token_symbol]['quote']['USD']
+    if quote['price']:
+        token_to_update.price = quote['price']
+    if quote['percent_change_24h']:
+        token_to_update.price_change_24h = quote['percent_change_24h']
+    if quote['volume_24h']:
+        token_to_update.volume_24h = quote['volume_24h']
 
 def fetch_new():
     print("fetching new listings from uniswap")
@@ -280,7 +302,6 @@ def filter_top_movers(tokens):
             return False
         return True
     return [token for token in tokens if tokenFilter(token)]
-
 
 
 def handle_404(request, response, exception):
