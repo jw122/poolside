@@ -1,27 +1,43 @@
-<p class="new-listing-warning text-sm text-white -mt-2 mb-4">
-  ⚠️ &nbsp; Caution: Many new tokens are scams, clones or rugpulls.
-</p>
 <table class="shadow-lg bg-gray-700">
 <thead>
 <tr>
-  <th class="name bg-blue-900 text-white border text-left px-8 py-4 text-sm">Name</th>
-  <th class="symbol bg-blue-900 text-white border text-left px-8 py-4 text-sm">Symbol</th>
-  <th class="trades bg-blue-900 text-white border text-left px-8 py-4 text-sm">Activity</th>
-  <th class="volume bg-blue-900 text-white border text-left px-8 py-4 text-sm">Volume</th>
+  <th class="name bg-blue-900 text-white border text-left px-8 py-4 text-sm">Token</th>
+  <th class="volume bg-blue-900 text-white border text-left px-8 py-4 text-sm">About</th>
 </tr>
 </thead>
+
 <tbody>
+<tr  class="new-listing-header text-sm text-white -mt-2 mb-4">
+
+  <td>
+    <div class="new-listing-warning">⚠️ &nbsp; Caution: Some new listings may be scams.
+      </div>
+    </td>
+
+</tr>
 <tr v-for="token in displayedNewListings">
   <td v-bind:data-token="token.keyName" class="name border px-8 py-4 text-sm text-gray-100">
     <div class="token-name-inner">
     ${ token.name }
+    <div v-if="token.symbol" class="token-symbol">
+      <button class="bg-gray-600 hover:bg-gray-500 rounded text-white px-2 mt-3 mr-2">
+        <p class="font-semibold text-lg">
+          <a target="_blank"  v-bind:href="'https://twitter.com/search?q=$' + token.formattedSymbol">
+            $${ token.formattedSymbol }
+          </a>
+          </p>
+      </button>
+      </div>
+    <div class="token-added text-sm m-3">added ${ token.addedDate }</div>
     {% include "admin_options.html" %}
-    {% include "token_audit.html" %}
     </div>
 </td>
-  <td class="symbol border px-8 py-4 text-sm text-gray-100">${ token.symbol }</td>
-  <td class="trades border px-4 text-center py-4 text-sm text-gray-100">added ${ token.addedDate }<br/>${ token.tradeCount } trades</td>
-  <td class="volume border px-8 py-4 text-sm text-gray-100 text-center">${ token.tradeVolume }</td>
+  <td class="volume border px-8 py-4 text-sm text-gray-100 text-center">
+    <div>${ token.tradeVolume }<br/>${ token.tradeCount } trades</div>
+
+    {% include "token_audit.html" %}
+
+  </td>
 </tr>
 </tbody>
 </table>

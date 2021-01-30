@@ -44,8 +44,26 @@ td.description {
   word-wrap: break-word;
 }
 
+th.category,
+td.category {
+  max-width: 120px;
+  word-wrap: break-word;
+}
+
 td.description .token-description-detailed, td.description .token-description-summary{
   cursor: pointer;
+}
+
+.token-added{
+
+}
+
+.token-tag{
+
+}
+
+.token-tag-badge{
+    cursor: pointer;
 }
 
 .token-info p{
@@ -121,11 +139,15 @@ img.token-logo{
 	position: relative;
 }
 
+.new-listing-header{
+  height: 40px;
+}
+
 .new-listing-warning{
-	width: 408px;
-	position: absolute;
-	right: 0;
-	top: -25px;
+  position: absolute;
+  margin: -10px 16px;
+  text-align: center;
+  font-size: 13px;
 }
 
 .pagination{
