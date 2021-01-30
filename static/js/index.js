@@ -131,6 +131,14 @@ $(function(){
   	}
   })
 
+  $.poolside.quote = new Vue({
+    el: '#quotes',
+    delimiters: ['${', '}'],
+    data: {
+      quoteInfo: []
+    },
+  })
+
 
 
 
@@ -165,6 +173,27 @@ $('#tokens').click(function(e){
 
 });
 
+$('#one-inch-quote').click(function(e) {
+  console.log("getting 1inch quote!")
+  token1 = document.getElementById('from-token-address').innerHTML;
+  token2 = document.getElementById('to-token-address').value;
+  if (token1 == token2) {
+    // fromTokenAddress and toTokenAddress cannot be the same
+    return;
+  } else {
+    amount = document.getElementById('quote-amount').value;
+    request_url = '/api/one-inch/' + token1 + '-' + token2 + '-' + amount
+    $.ajax({
+      type: "GET",
+      url: request_url,
+      success: function(response){
+        console.log("response: ", response.quotes)
+        $('#quotes').removeClass('invisible');
+        $.poolside.quote.quoteInfo = response.quotes;
+      }
+    })
+  }
 
+})
 
 });

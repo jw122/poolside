@@ -24,12 +24,12 @@ header {
   font-family: "Patrick Hand", sans-serif;
 }
 
-table{
-	width: 100%;
+table {
+  width: 100%;
 }
 
-.token-name-inner{
-		min-height: 40px;
+.token-name-inner {
+  min-height: 40px;
 }
 
 th.name,
@@ -44,6 +44,12 @@ td.description {
   word-wrap: break-word;
 }
 
+td.description .token-description-detailed,
+td.description .token-description-summary {
+  cursor: pointer;
+}
+
+.token-info p {
 th.category,
 td.category {
   max-width: 120px;
@@ -76,7 +82,7 @@ td.volume {
   word-wrap: break-word;
 }
 
-td.volume{
+td.volume {
   font-size: 12px;
   padding: 0px 10px;
 }
@@ -87,7 +93,7 @@ td.price {
   word-wrap: break-word;
 }
 
-td.price{
+td.price {
   font-size: 12px;
   padding: 0 5px;
   text-align: center;
@@ -99,33 +105,34 @@ td.trades {
   word-wrap: break-word;
 }
 
-img.token-logo{
+img.token-logo {
   float: left;
   margin-right: 5px;
   margin-bottom: -4px;
   margin-top: 1px;
   width: 20%;
-
 }
 
-.token-audit{
-	font-size: 0.8em;
+.token-audit {
+  font-size: 0.8em;
 }
 
-.token-audit-item{
-	margin-top: 2px;
+.token-audit-item {
+  margin-top: 2px;
 }
-.token-audit-item:first-child{
-	margin-top: 8px;
+.token-audit-item:first-child {
+  margin-top: 8px;
 }
 
 .dropdown:hover .dropdown-menu {
   display: block;
 }
 
-.dropdown-menu ul, .dropdown-menu li, .dropdown-menu li a{
-	z-index: 1000;
-	position: relative;
+.dropdown-menu ul,
+.dropdown-menu li,
+.dropdown-menu li a {
+  z-index: 1000;
+  position: relative;
 }
 
 .token-details {
@@ -135,10 +142,14 @@ img.token-logo{
   color: white;
 }
 
-.new-listings-inner{
-	position: relative;
+.token-get-quote {
+  color: gray;
 }
 
+.new-listings-inner {
+  position: relative;
+}
+  
 .new-listing-header{
   height: 40px;
 }
@@ -150,44 +161,42 @@ img.token-logo{
   font-size: 13px;
 }
 
-.pagination{
-	padding: 10px;
+.pagination {
+  padding: 10px;
 }
 
-li.page-item{
-	display: inline;
-}
-button.page-link {
-	display: inline-block;
+li.page-item {
+  display: inline;
 }
 button.page-link {
-    color: #29b3ed;
-    font-weight: 500;
+  display: inline-block;
+}
+button.page-link {
+  color: #29b3ed;
+  font-weight: 500;
 }
 
-.page-number{
-	padding: 0 2px;
+.page-number {
+  padding: 0 2px;
 }
 
-.page-number.active{
-	font-weight: bold;
+.page-number.active {
+  font-weight: bold;
 }
 
-.web3-signup-inner{
-	width: 478px;
-	margin: 0 auto;
+.web3-signup-inner {
+  width: 478px;
+  margin: 0 auto;
 }
 
-.web3-sign-in-btn{
-	height: 40px;
-	margin-top: 36px;
-	margin-left: 15px;
+.web3-sign-in-btn {
+  height: 40px;
+  margin-top: 36px;
+  margin-left: 15px;
 }
 
-@media (max-width:1100px) {
-
-	#top-movers{
-		padding-left: 0;
-	}
-
+@media (max-width: 1100px) {
+  #top-movers {
+    padding-left: 0;
+  }
 }
