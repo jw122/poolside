@@ -131,6 +131,14 @@ $(function(){
   	}
   })
 
+  $.poolside.quote = new Vue({
+    el: '#quotes',
+    delimiters: ['${', '}'],
+    data: {
+      quoteInfo: []
+    },
+  })
+
 
 
 
@@ -179,7 +187,8 @@ $('#one-inch-quote').click(function(e) {
       type: "GET",
       url: request_url,
       success: function(response){
-        console.log("response: ", response)
+        console.log("response: ", response.quotes)
+        $.poolside.quote.quoteInfo = response.quotes;
       }
     })
   }

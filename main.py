@@ -103,11 +103,11 @@ class OneInchHandler(webapp2.RequestHandler):
         api_response = one_inch.one_inch_quotes(token1_id, token2_id, amount)
         print("response from 1inch: ", api_response)
         to_token_amount = api_response['toTokenAmount']
-
+        to_token = api_response['toToken']['symbol']
+        from_token = api_response['fromToken']['symbol']
         # TODO: update to render template with response
         self.response.headers['Content-Type'] = 'application/json'
-        self.response.out.write(json.dumps({'from_token': token1_id, 'to_token': token2_id, 'from_token_amount': amount, 'to_token_amount': to_token_amount}))
-
+        self.response.out.write(json.dumps({'quotes': {'from_token': from_token, 'to_token': to_token, 'from_token_amount': amount, 'to_token_amount': to_token_amount}}))
 class SearchAPI(webapp2.RequestHandler):
     def get(self):
         documents = search.query_index('tokens', self.request.get('keyword'))
