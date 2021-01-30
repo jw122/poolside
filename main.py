@@ -150,7 +150,7 @@ def fetch_uniswap():
     print("fetching data from uniswap")
     subgraph_response = graph.uniswap_tokens()
     tokens = []
-    cmc_api_key = get_setting('CMC_API_KEY')
+    
     for token in subgraph_response['data']['tokens']:
         symbol = token['symbol']
         new_token = Token(
@@ -158,50 +158,67 @@ def fetch_uniswap():
             id=token['id'],
             name=token['name'],
             symbol=symbol,
-            # TODO: this is not available through uniswap. get it elsewhere
-            # price=float(token_data.get('priceUSD', 0)),
             tradeVolume=float(token.get('tradeVolumeUSD',0)),
             tradeCount=int(token.get('txCount',0)),
             decimals=int(token['decimals']),
         )
 
-        # TODO: only get metadata if not already in DB
-
-        metadata, price_info = token_metadata.get_metadata(symbol, cmc_api_key)
-
-        if price_info and 'data' in price_info:
-            if symbol.upper() in price_info['data']:
-                quote = price_info['data'][symbol.upper()]['quote']['USD']
-                if quote['price']:
-                    new_token.price = quote['price']
-                if quote['percent_change_24h']:
-                    new_token.price_change_24h = quote['percent_change_24h']
-                if quote['volume_24h']:
-                    new_token.volume_24h = quote['volume_24h']
-        if metadata and 'data' in metadata:
-            print("processing data for ", symbol)
-            if symbol.upper() in metadata['data']:
-                info = metadata['data'][symbol.upper()]
-                print("got info from CMC", info)
-                logging.info(info)
-
-                new_token.logo = info['logo']
-                new_token.tags = info.get('tag-names') or []
-                new_token.description = info['description']
-                if len(info['urls']['website']) > 0:
-                    new_token.website = info['urls']['website'][0]
-                if len(info['urls']['technical_doc']) > 0:
-                    new_token.whitepaper = info['urls']['technical_doc'][0]
-                if len(info['urls']['twitter']) > 0:
-                    new_token.twitter = info['urls']['twitter'][0]
-                if len(info['urls']['explorer']) > 0:
-                    new_token.explorer_url = info['urls']['explorer'][0]
-            new_token.created = datetime.datetime.strptime(info['date_added'], "%Y-%m-%dT%H:%M:%S.%fZ")
-            time.sleep(2)
-
         tokens.append(new_token)
     db.put(tokens)
+    populate_metadata(tokens)
+    
     return tokens
+
+def populate_metadata(tokens):
+        cmc_api_key = get_setting('CMC_API_KEY')
+        symbols = [tok.symbol for tok in tokens if tok.symbol.isalnum() and tok.symbol.upper() not in token_metadata.invalid_tokens]
+        
+        symbol_query = ','.join(symbols)
+        print("fetching CMC data for tokens", symbol_query)
+
+        metadata, price_info = token_metadata.get_metadata(symbol_query, cmc_api_key)
+
+        if metadata and 'data' in metadata:
+            data = metadata['data']
+            for token_symbol in data:
+                info = data[token_symbol]
+                if not info['platform']:
+                    continue
+
+                address = info['platform']['token_address']
+                token_to_update = Token.get_by_key_name(address.lower())
+                if token_to_update:
+                    print("updating token", token_to_update)
+                    # token details
+                    logging.info(info)
+                    print("token info: ", info)
+                    token_to_update.logo = info['logo']
+                    token_to_update.tags = info.get('tag-names') or []
+                    token_to_update.description = info['description']
+                    if len(info['urls']['website']) > 0:
+                        token_to_update.website = info['urls']['website'][0]
+                    if len(info['urls']['technical_doc']) > 0:
+                        token_to_update.whitepaper = info['urls']['technical_doc'][0]
+                    if len(info['urls']['twitter']) > 0:
+                        token_to_update.twitter = info['urls']['twitter'][0]
+                    if len(info['urls']['explorer']) > 0:
+                        token_to_update.explorer_url = info['urls']['explorer'][0]
+
+                    # price info
+                    quote = price_info['data'][token_symbol.upper()]['quote']['USD']
+                    print("quote for token: ", quote)
+                    if quote['price']:
+                        token_to_update.price = quote['price']
+                    if quote['percent_change_24h']:
+                        token_to_update.price_change_24h = quote['percent_change_24h']
+                    if quote['volume_24h']:
+                        token_to_update.volume_24h = quote['volume_24h']
+                    
+                    token_to_update.put()
+                    print("updated details and price for token", token_to_update.symbol)
+                else:
+                    print("no existing token in DB for " + info['platform']['symbol'] + ' (' + address + ')')
+
 
 def fetch_new():
     print("fetching new listings from uniswap")
