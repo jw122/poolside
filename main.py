@@ -216,13 +216,11 @@ def populate_metadata(tokens):
 
 def get_token_to_update(tokens, address):
     for token in tokens:
-        print("current token: ", token)
         if token.id == address:
             return token
     return None
 
 def populate_urls(token_to_update, urls):
-    print("urls: ", urls)
     if len(urls['website']) > 0:
         token_to_update.website = urls['website'][0]
     if len(urls['technical_doc']) > 0:
@@ -233,7 +231,6 @@ def populate_urls(token_to_update, urls):
         token_to_update.explorer_url = urls['explorer'][0]
 
 def populate_price(token_to_update, token_symbol, price_data):
-    print("incoming quote: ", price_data)
     quote = price_data[token_symbol]['quote']['USD']
     if quote['price']:
         token_to_update.price = quote['price']
