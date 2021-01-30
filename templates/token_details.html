@@ -71,15 +71,23 @@
                 <p>Swap To</p>
                 <select class="form-control form-control-sm" id="to-token-address">
                     <option style="color: black" value="0x6b175474e89094c44da98b954eedeac495271d0f">DAI</option>
-                    <option style="color: black" value="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2">ETH</option>
+                    <option style="color: black" value="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48">USDC</option>
+                    <option style="color: black" value="0xdac17f958d2ee523a2206206994597c13d831ec7">USDT</option>
+                    <option style="color: black" value="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2">ETH (Wrapped)
+                    </option>
                     <option style="color: black" value="0x2260fac5e5542a773aa44fbcfedf7c193bc2c599">WBTC</option>
+                    <option style="color: black" value="0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f">SNX</option>
+                    <option style="color: black" value="0x514910771af9ca656af840dff83e8264ecf986ca">LINK</option>
+                    <option style="color: black" value="0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e">YFI</option>
+                    <option style="color: black" value="0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9">AAVE</option>
+                    <option style="color: black" value="0xc944e90c64b2c07662a292be6244bdf05cda44a7">GRT</option>
                 </select>
 
             </form>
             <button id="one-inch-quote">📈 Fetch Quote</button>
             {% include "price_quote.html" %}
             <p>
-                <a href="https://1inch.exchange/#/{{ token.symbol }}/ETH"> View on 1inch</a>
+                <a href="https://1inch.exchange/#/{{ token.symbol }}/ETH" target="_blank"> View on 1inch</a>
             </p>
         </div>
 

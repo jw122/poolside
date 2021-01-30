@@ -188,6 +188,7 @@ $('#one-inch-quote').click(function(e) {
       url: request_url,
       success: function(response){
         console.log("response: ", response.quotes)
+        $('#quotes').removeClass('invisible');
         $.poolside.quote.quoteInfo = response.quotes;
       }
     })
