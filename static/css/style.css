@@ -49,7 +49,7 @@ td.description .token-description-summary {
   cursor: pointer;
 }
 
-.token-info p {
+.token-info p,
 th.category,
 td.category {
   max-width: 120px;
@@ -149,7 +149,7 @@ img.token-logo {
 .new-listings-inner {
   position: relative;
 }
-  
+
 .new-listing-header{
   height: 40px;
 }
