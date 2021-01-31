@@ -60,12 +60,12 @@ td.description .token-description-detailed, td.description .token-description-su
   cursor: pointer;
 }
 
-.token-added{
-
+.token-detail-description {
+  margin-top: 3%;
 }
 
-.token-tag{
-
+.token-detail-links {
+  margin-top: 3%
 }
 
 .token-tag-badge{
@@ -137,13 +137,15 @@ img.token-logo {
 
 .token-details {
   width: 80%;
-  margin-top: 15%;
   margin-left: 5%;
   color: white;
 }
 
 .token-get-quote {
-  color: gray;
+  color: white;
+  margin-top: 3%;
+  padding: 15px;
+  border-radius: 15px;
 }
 
 .new-listings-inner {
