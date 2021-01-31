@@ -2,46 +2,46 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Poolside: 🆕 & 🔥 DeFi Tokens</title>
-  <meta name="viewport" content="width=620, initial-scale=1">
-  <!-- Link to your stylesheet here -->
-  <link rel="stylesheet" href="/static/css/tailwind.min.css">
-  <link rel="stylesheet" href="/static/css/style.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Patrick+Hand:400">
-  <script type="text/javascript">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Poolside: 🆕 & 🔥 DeFi Tokens</title>
+    <meta name="viewport" content="width=620, initial-scale=1">
+    <!-- Link to your stylesheet here -->
+    <link rel="stylesheet" href="/static/css/tailwind.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Patrick+Hand:400">
+    <script type="text/javascript">
 
-  </script>
+    </script>
 
 </head>
 
 <body class="bg-gray-800">
 
+
   {% include "header.html" %}
   {% include "tokens.html" %}
   {% include "signup.html" %}
   {% include "footer.html" %}
-  <script type="text/javascript" src="/static/js/jquery.1.11.1.js"></script>
-  <script type="text/javascript" src="/static/js/vue.min.js"></script>
-  <script type="text/javascript" src="/static/js/vue-carousel.min.js"></script>
-  <script src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
-  <script type="text/javascript" src="https://unpkg.com/web3modal"></script>
-  <script type="text/javascript" src="https://unpkg.com/evm-chains/lib/index.js"></script>
-  <script type="text/javascript"
-    src="https://unpkg.com/@walletconnect/web3-provider@latest/dist/umd/index.min.js"></script>
-  <script type="text/javascript" src="https://unpkg.com/fortmatic@2.0.6/dist/fortmatic.js"></script>
-  <script type="text/javascript" src="/static/js/web3.js"></script>
-  <script src="https://kit.fontawesome.com/84903da61a.js" crossorigin="anonymous"></script>
-  <script type="text/javascript">
-    $(function () {
-      {% if isAdmin %}
-      $.isAdmin = true;
-      {% endif %}
-    });
-  </script>
-  <script type="text/javascript" src="/static/js/index.js"></script>
-  <script type="text/javascript" src="/static/js/aavegotchi.js"></script>
+<script type="text/javascript" src="/static/js/jquery.1.11.1.js"></script>
+<script type="text/javascript" src="/static/js/vue.min.js"></script>
+<script type="text/javascript" src="/static/js/vue-carousel.min.js"></script>
+<script src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/web3modal"></script>
+<script type="text/javascript" src="https://unpkg.com/evm-chains/lib/index.js"></script>
+<script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider@latest/dist/umd/index.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/fortmatic@2.0.6/dist/fortmatic.js"></script>
+ <script type="text/javascript" src="/static/js/web3.js"></script>
+ <script src="https://kit.fontawesome.com/84903da61a.js" crossorigin="anonymous"></script>
+<script type="text/javascript">
+$(function(){
+  {% if isAdmin %}
+  $.isAdmin = true;
+  {% endif %}
+});
+</script>
+<script type="text/javascript" src="/static/js/index.js"></script>
+<script type="text/javascript" src="/static/js/aavegotchi.js"></script>
 </body>
 
 </html>
