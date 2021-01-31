@@ -5,7 +5,7 @@ cron:
 
 - description: update data
   url: /update-data
-  schedule: every 30 minutes
+  schedule: every 60 minutes
 
 - description: update nft data
   url: /update-nft-data
