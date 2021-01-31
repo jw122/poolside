@@ -29,29 +29,29 @@ class UpdateData(webapp2.RequestHandler):
         # one_inch_tokens = fetch_one_inch()
 
         # new tokens
-        #new_listings = fetch_new()
+        new_listings = fetch_new()
 
         token_names = []
         documents = []
-        # for token_list in [new_listings, uniswap_tokens]:
-        #     for token in token_list:
-        #         logging.info('token key name: %s' % token.key().name())
-        #         if token.key().name() not in token_names:
-        #             token_names.append(token.key().name())
-        #             search_fields = [
-        #                 { 'name': 'name', 'value': token.name.split(',')[0], 'tokenize': True },
-        #                 { 'name': 'symbol', 'value': token.symbol, 'tokenize': False  },
-        #             ]
-        #             documents.append(search.create_document(token.key().name(), search_fields))
-        #         else:
-        #             logging.warning('token document already created: %s' % token.key().name())
-        #
-        # MAX_DOCUMENTS = 200
-        # if documents:
-        #     for x in xrange(0,len(documents),MAX_DOCUMENTS):
-        #         search.add_documents_to_index('tokens', documents[x:x+MAX_DOCUMENTS])
+        for token_list in [new_listings, uniswap_tokens]:
+            for token in token_list:
+                logging.info('token key name: %s' % token.key().name())
+                if token.key().name() not in token_names:
+                    token_names.append(token.key().name())
+                    search_fields = [
+                        { 'name': 'name', 'value': token.name.split(',')[0], 'tokenize': True },
+                        { 'name': 'symbol', 'value': token.symbol, 'tokenize': False  },
+                    ]
+                    documents.append(search.create_document(token.key().name(), search_fields))
+                else:
+                    logging.warning('token document already created: %s' % token.key().name())
 
-        tokens = uniswap_tokens# + new_listings
+        MAX_DOCUMENTS = 200
+        if documents:
+            for x in xrange(0,len(documents),MAX_DOCUMENTS):
+                search.add_documents_to_index('tokens', documents[x:x+MAX_DOCUMENTS])
+
+        tokens = uniswap_tokens + new_listings
         self.response.out.write('Saved %s tokens' % len(tokens))
 
 class UpdateNFTData(webapp2.RequestHandler):
