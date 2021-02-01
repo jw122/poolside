@@ -1,12 +1,11 @@
 body,
 html {
-  font-family: "Open Sans", sans-serif;
   text-rendering: optimizeLegibility !important;
   -webkit-font-smoothing: antialiased !important;
   color: #333;
 }
 
-header {
+/* header {
   background: url("/static/images/poolside-bg.jpg") #5fffe0;
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -14,15 +13,15 @@ header {
   position: absolute;
   width: 100%;
   height: 120px;
-}
+} */
 
 #subheader {
   margin-top: -14px;
 }
 
-.patrick-hand {
+/* .patrick-hand {
   font-family: "Patrick Hand", sans-serif;
-}
+} */
 
 table {
   width: 100%;
@@ -60,12 +59,12 @@ td.description .token-description-detailed, td.description .token-description-su
   cursor: pointer;
 }
 
-.token-added{
-
+.token-detail-description {
+  margin-top: 3%;
 }
 
-.token-tag{
-
+.token-detail-links {
+  margin-top: 3%
 }
 
 .token-tag-badge{
@@ -137,13 +136,15 @@ img.token-logo {
 
 .token-details {
   width: 80%;
-  margin-top: 15%;
   margin-left: 5%;
   color: white;
 }
 
 .token-get-quote {
-  color: gray;
+  color: white;
+  margin-top: 3%;
+  padding: 15px;
+  border-radius: 15px;
 }
 
 .new-listings-inner {
@@ -155,9 +156,6 @@ img.token-logo {
 }
 
 .new-listing-warning{
-  position: absolute;
-  margin: -10px 16px;
-  text-align: center;
   font-size: 13px;
 }
 

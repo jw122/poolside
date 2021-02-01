@@ -22,72 +22,88 @@
 
     <div class="container token-details">
         <img src="{{ token.logo }}" alt="">
-        <h3>
+        <h3 class="text-3xl">
             {{ token.name }}
         </h3>
 
         {% if token.description %}
-        <p>
-            {{ token.description }}
-        </p>
+
+        <div class="token-detail-description">
+            <p>
+                {{ token.description }}
+            </p>
+        </div>
         {% endif %}
 
-        {% if token.whitepaper %}
-        <p>
+        <div class="token-detail-links">
+            {% if token.whitepaper %}
+            <p>
+    
+                <a href="{{ token.whitepaper }}"><i class="fas fa-scroll"></i> Whitepaper</a>
+    
+            </p>
+            {% endif %}
+    
+            {% if token.website %}
+            <p>
+                <a href="{{ token.website }}"><i class="fas fa-link"></i> Website</a>
+    
+            </p>
+            {% endif %}
+    
+            {% if token.explorer_url %}
+            <p>
+                <a href="{{ token.explorer_url }}"><i class="fas fa-search"></i> Explorer</a>
+            </p>
+            {% endif %}
+    
+            {% if token.twitter %}
+            <p>
+                <a href="{{ token.twitter }}"><i class="fab fa-twitter"></i> Twitter</a>
+    
+            </p>
+            {% endif %}
+        </div>
 
-            <a href="{{ token.whitepaper }}"><i class="fas fa-scroll"></i> Whitepaper</a>
 
-        </p>
-        {% endif %}
-
-        {% if token.website %}
-        <p>
-            <a href="{{ token.website }}"><i class="fas fa-link"></i> Website</a>
-
-        </p>
-        {% endif %}
-
-        {% if token.explorer_url %}
-        <p>
-            <a href="{{ token.explorer_url }}"><i class="fas fa-search"></i> Explorer</a>
-        </p>
-        {% endif %}
-
-        {% if token.twitter %}
-        <p>
-            <a href="{{ token.twitter }}"><i class="fab fa-twitter"></i> Twitter</a>
-
-        </p>
-        {% endif %}
-
-        <div class="token-get-quote">
-            <h3 style="color: white"><i class="fas fa-dollar-sign"></i> Get 1inch Quote</h3>
+        <div class="token-get-quote shadow-2xl bg-gray-700">
+            <div class="my-3">
+                <div><p><img src="https://pbs.twimg.com/profile_images/1348253739057098753/JWXLyjdz_400x400.jpg" class="h-10 rounded object-left" alt=""></p></div>
+                <h3 style="color: white" class="text-xl"> Quote from <b style="color: rgb(204, 17, 110)">1inch</b></h3>
+    
+            </div>
+            
+            
             <p>From: {{ token.symbol }} (<span id="from-token-address">{{ token.id }}</span>) </p>
             <form class="form-inline">
                 <div class="form-group mb-2">
-                    <label for="staticEmail2" class="sr-only">Amount</label>
-                    <input id="quote-amount" type="text" placeholder="Enter Amount">
+                    <label class="sr-only">Amount</label>
+                    <input id="quote-amount"  class="rounded-md p-2 border-t mr-0 border-b border-l border-gray-800 border-gray-200 bg-gray-800" placeholder="Enter Amount"/>
+
                 </div>
                 <p>Swap To</p>
-                <select class="form-control form-control-sm" id="to-token-address">
-                    <option style="color: black" value="0x6b175474e89094c44da98b954eedeac495271d0f">DAI</option>
-                    <option style="color: black" value="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48">USDC</option>
-                    <option style="color: black" value="0xdac17f958d2ee523a2206206994597c13d831ec7">USDT</option>
-                    <option style="color: black" value="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2">ETH (Wrapped)
-                    </option>
-                    <option style="color: black" value="0x2260fac5e5542a773aa44fbcfedf7c193bc2c599">WBTC</option>
-                    <option style="color: black" value="0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f">SNX</option>
-                    <option style="color: black" value="0x514910771af9ca656af840dff83e8264ecf986ca">LINK</option>
-                    <option style="color: black" value="0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e">YFI</option>
-                    <option style="color: black" value="0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9">AAVE</option>
-                    <option style="color: black" value="0xc944e90c64b2c07662a292be6244bdf05cda44a7">GRT</option>
-                </select>
-
+                <div>
+                    <select id="to-token-address" class="form-select px-3 py-2 mb-1 border-2 border-gray-800 bg-gray-800 rounded-md focus:outline-none transition-colors cursor-pointer">
+                        <option style="color: black" value="0x6b175474e89094c44da98b954eedeac495271d0f">DAI</option>
+                        <option style="color: black" value="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48">USDC</option>
+                        <option style="color: black" value="0xdac17f958d2ee523a2206206994597c13d831ec7">USDT</option>
+                        <option style="color: black" value="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2">ETH (Wrapped)
+                        </option>
+                        <option style="color: black" value="0x2260fac5e5542a773aa44fbcfedf7c193bc2c599">WBTC</option>
+                        <option style="color: black" value="0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f">SNX</option>
+                        <option style="color: black" value="0x514910771af9ca656af840dff83e8264ecf986ca">LINK</option>
+                        <option style="color: black" value="0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e">YFI</option>
+                        <option style="color: black" value="0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9">AAVE</option>
+                        <option style="color: black" value="0xc944e90c64b2c07662a292be6244bdf05cda44a7">GRT</option>
+                    </select>
+                </div>
             </form>
-            <button id="one-inch-quote">📈 Fetch Quote</button>
+
+            <button id="one-inch-quote" class="rounded-md mt-2 bg-green-400  text-gray-800 font-bold p-2 uppercase border-green-500 border-t border-b border-r">📈 Fetch Quote</button>
+
             {% include "price_quote.html" %}
             <p>
-                <a href="https://1inch.exchange/#/{{ token.symbol }}/ETH" target="_blank"> View on 1inch</a>
+                <a href="https://1inch.exchange/#/{{ token.symbol }}/ETH" target="_blank"><i class="fas fa-external-link-alt"></i> View on 1inch</a>
             </p>
         </div>
 
