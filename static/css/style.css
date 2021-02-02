@@ -157,6 +157,8 @@ img.token-logo {
 
 .new-listing-warning{
   font-size: 13px;
+  position: absolute;
+  margin: -8px 15px;
 }
 
 .pagination {

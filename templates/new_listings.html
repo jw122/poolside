@@ -15,7 +15,7 @@
             </tr>
           </thead>
           <tbody class="bg-gray divide-y divide-gray-200">
-            <td>
+            <td class="new-listing-header">
               <div class="new-listing-warning text-white m-3">⚠️ &nbsp; Caution: Some new listings may be scams.
                 </div>
               </td>
@@ -38,11 +38,11 @@
             </td>
               <td class="volume px-8 py-4 border-r-4 text-sm text-gray-100 text-center">
                 <div>${ token.tradeVolume }<br/>${ token.tradeCount } trades</div>
-            
+
                 {% include "token_audit.html" %}
-            
+
               </td>
-            
+
             </tr>
           </tbody>
         </table>
