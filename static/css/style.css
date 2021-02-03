@@ -156,7 +156,9 @@ img.token-logo {
 }
 
 .new-listing-warning{
-  font-size: 13px;
+  font-size: 12px;
+  position: absolute;
+  margin: -8px 15px;
 }
 
 .pagination {
