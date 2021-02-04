@@ -127,6 +127,7 @@ class Pair(db.Expando, TokenModel):
     hasWebsite = db.BooleanProperty(required=False)
     hasInvestors = db.BooleanProperty(required=False)
     hasWhitepaper = db.BooleanProperty(required=False)
+    confirmedScam = db.BooleanProperty(required=False)
     isAudited = db.BooleanProperty(required=False)
     isClone = db.BooleanProperty(required=False)
     age = db.IntegerProperty(required=False) #  months?

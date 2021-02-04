@@ -1,20 +1,23 @@
 <div class="token-audit">
-<div class="token-audit-item" v-if="token.hasIdentifiedTeam === 'True'">
+<div class="token-audit-item" v-if="token.hasIdentifiedTeam">
   ✅&nbsp; Team
 </div>
-<div class="token-audit-item" v-if="token.hasIdentifiedTeam === 'False'">
+<div class="token-audit-item" v-if="token.hasIdentifiedTeam === false">
   ❗&nbsp; Anonymous
 </div>
-<div class="token-audit-item" v-if="token.isLiquidityLocked === 'True'">
+<div class="token-audit-item" v-if="token.confirmedScam">
+  ❗&nbsp; Confirmed Scam
+</div>
+<div class="token-audit-item" v-if="token.isLiquidityLocked">
   ✅&nbsp; Liquidity Locked
 </div>
-<div class="token-audit-item" v-if="token.isAudited === 'True'">
+<div class="token-audit-item" v-if="token.isAudited">
   ✅&nbsp; Audited
 </div>
-<div class="token-audit-item" v-if="token.hasWhitepaper === 'True'">
+<div class="token-audit-item" v-if="token.hasWhitepaper">
   ✅&nbsp; Whitepaper
 </div>
-<div class="token-audit-item" v-if="token.isClone === 'True'">
+<div class="token-audit-item" v-if="token.isClone">
   ❗&nbsp; Clone
 </div>
 
