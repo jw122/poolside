@@ -4,7 +4,10 @@ function loadNewListings(){
             type: "GET",
             cache: false,
             success: function(response) {
-              $.poolside.app.newListings.data = response.pairs;
+              $.poolside.app.newListings.data = response.pairs.map(p => {
+                p.renderKey = p.keyName;
+                return p;
+              });
               $.poolside.app.setPages($.poolside.app.newListings);
             }
       });
@@ -147,15 +150,22 @@ searchBar();
 $('#tokens').click(function(e){
   var parent = $(e.target).parent();
   if (parent.hasClass('admin-action')){
+    var tokenKeyName = parent.parents('td').attr('data-token');
     $.ajax({
         type: "POST",
         url: "/admin/admin-action",
         data: {
             'action' : parent.attr('data-action'),
-            'pair': parent.parents('td').attr('data-token')
+            'pair': tokenKeyName
         },
         success: function(response){
-          loadNewListings();
+        for (let token of $.poolside.app.newListings.data) {
+            if (token.keyName === tokenKeyName){
+              token[parent.attr('data-action')] = true;
+              token.renderKey = token.renderKey + '-1';
+              break;
+            }
+        }
         }
     });
 
