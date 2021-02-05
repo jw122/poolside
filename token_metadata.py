@@ -7,7 +7,7 @@ metadata_url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/info'
 price_quotes_url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
 
 
-invalid_tokens = ['ANKRETH','CIBS','SBREE','TOMOE']
+invalid_tokens = ['ANKRETH','CIBS','SBREE','TOMOE', 'HOOK']
 
 
 def get_metadata(symbol, api_key):
