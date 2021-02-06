@@ -123,10 +123,12 @@ class Pair(db.Expando, TokenModel):
     modified = db.DateTimeProperty(auto_now=True)
 
     hasIdentifiedTeam = db.BooleanProperty(required=False)
+    hasAnonymousTeam = db.BooleanProperty(required=False)
     isLiquidityLocked = db.BooleanProperty(required=False)
     hasWebsite = db.BooleanProperty(required=False)
     hasInvestors = db.BooleanProperty(required=False)
     hasWhitepaper = db.BooleanProperty(required=False)
+    confirmedScam = db.BooleanProperty(required=False)
     isAudited = db.BooleanProperty(required=False)
     isClone = db.BooleanProperty(required=False)
     age = db.IntegerProperty(required=False) #  months?

@@ -19,7 +19,7 @@
               <div class="new-listing-warning text-white m-3">⚠️ &nbsp; Caution: Some new listings may be scams.
                 </div>
               </td>
-            <tr v-for="token in displayedNewListings">
+            <tr v-for="token in displayedNewListings" :key="token.renderKey">
               <td v-bind:data-token="token.keyName" class="name px-8 py-4 text-sm text-gray-100 border-l">
                 <div class="token-name-inner">
                 ${ token.name }

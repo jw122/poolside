@@ -65,7 +65,7 @@ class NewListingsAPI(webapp2.RequestHandler):
         new_listing_cutoff = datetime.datetime.now() - datetime.timedelta(days=NEW_LISTING_MAX_DAYS)
         pairs = Pair.all().filter('created > ', new_listing_cutoff).order('-created').fetch(500)
         api_response = {
-            'pairs': [p.to_dict() for p in pairs]
+            'pairs': [p.to_dict() for p in filter_pairs(pairs)]
         }
         self.response.headers['Content-Type'] = 'application/json'
         self.response.out.write(json.dumps(api_response))
@@ -124,11 +124,13 @@ class SearchAPI(webapp2.RequestHandler):
 class AdminAction(webapp2.RequestHandler):
     def post(self):
         pair = Pair.get_by_key_name(self.request.get('pair'))
-        if self.request.get('action') == 'hasAnonymousTeam':
-            pair.hasIdentifiedTeam = False
-        else:
-            setattr(pair, self.request.get('action'), True)
+        setattr(pair, self.request.get('action'), True)
         pair.put()
+        api_response = {
+            'pair': pair.to_dict()
+        }
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps(api_response))
 
 def fetch_one_inch():
     print("fetching data from 1inch")
@@ -277,6 +279,13 @@ def scam_filter(listing):
     if tx_count < 100 or volume_usd < 1:
         return True
     return False
+
+def filter_pairs(pairs):
+    def pairFilter(pair):
+        if pair.confirmedScam:
+            return False
+        return True
+    return [pair for pair in pairs if pairFilter(pair)]
 
 def filter_top_movers(tokens):
     def tokenFilter(token):
