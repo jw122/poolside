@@ -1,7 +1,7 @@
 # Poolside
 Poolside is the source for new listings and trending assets in DeFi. Find and search through real-time data aggregated from The Graph, Uniswap, 1inch, Aavegotchi, Coinmarketcap and more.
 
-![alt text](static/images/poolside-horizontal_macbookgrey_front.png | width=100)
+![alt text](static/images/poolside-horizontal_macbookgrey_front.png){:width="50%"}
 
 Built by [James](https://jamslevy.github.io/) (james@poolside.finance) and [Julia](https://juliawu.me) (julia@poolside.finance) at the MarketMake hackathon. 
 
