@@ -1,7 +1,7 @@
 # Poolside
 Poolside is the source for new listings and trending assets in DeFi. Find and search through real-time data aggregated from The Graph, Uniswap, 1inch, Aavegotchi, Coinmarketcap and more.
 
-<img src="static/images/poolside-horizontal_macbookgrey_front.png" alt="alt text" width="100px">
+<img src="static/images/poolside-horizontal_macbookgrey_front.png" alt="alt text" width="300px">
 
 Built by [James](https://jamslevy.github.io/) (james@poolside.finance) and [Julia](https://juliawu.me) (julia@poolside.finance) at the MarketMake hackathon. 
 
@@ -16,6 +16,9 @@ The first version of Poolside offers the following core features:
 Users come to Poolside to discover the latest and promising tokens listed on Uniswap. As we fetch and index new listings, we also apply scam-filtering logic to eliminate the obvious fakes and clones. We also allow admins to manually flag tokens as scams. We believe that this form of curation can later become incentivized through PLSD tokens.
 
 The top movers are ordered by trade volume. For each token, one can see the daily and all-time volumes, current price, and change in the past day.  The detailed view provides links to the token's website, whitepaper, and etherscan. 
+
+<img src="static/images/poolside-details-screenshot.png" alt="alt text" width="300px">
+
 
 What differentiates Poolside from existing landing pages such as Defi Pulse? 
 
