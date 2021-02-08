@@ -3,6 +3,7 @@ html {
   text-rendering: optimizeLegibility !important;
   -webkit-font-smoothing: antialiased !important;
   color: #333;
+  font-family: "Open Sans", sans-serif;
 }
 
 /* header {

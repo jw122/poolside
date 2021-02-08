@@ -9,7 +9,7 @@
     <!-- Link to your stylesheet here -->
     <link rel="stylesheet" href="/static/css/tailwind.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Patrick+Hand:400">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Itim:400">
     <script type="text/javascript">
 
     </script>
@@ -38,29 +38,29 @@
         <div class="token-detail-links">
             {% if token.whitepaper %}
             <p>
-    
+
                 <a href="{{ token.whitepaper }}"><i class="fas fa-scroll"></i> Whitepaper</a>
-    
+
             </p>
             {% endif %}
-    
+
             {% if token.website %}
             <p>
                 <a href="{{ token.website }}"><i class="fas fa-link"></i> Website</a>
-    
+
             </p>
             {% endif %}
-    
+
             {% if token.explorer_url %}
             <p>
                 <a href="{{ token.explorer_url }}"><i class="fas fa-search"></i> Explorer</a>
             </p>
             {% endif %}
-    
+
             {% if token.twitter %}
             <p>
                 <a href="{{ token.twitter }}"><i class="fab fa-twitter"></i> Twitter</a>
-    
+
             </p>
             {% endif %}
         </div>
@@ -70,10 +70,10 @@
             <div class="my-3">
                 <div><p><img src="https://pbs.twimg.com/profile_images/1348253739057098753/JWXLyjdz_400x400.jpg" class="h-10 rounded object-left" alt=""></p></div>
                 <h3 style="color: white" class="text-xl"> Quote from <b style="color: rgb(204, 17, 110)">1inch</b></h3>
-    
+
             </div>
-            
-            
+
+
             <p>From: {{ token.symbol }} (<span id="from-token-address">{{ token.id }}</span>) </p>
             <form class="form-inline">
                 <div class="form-group mb-2">
